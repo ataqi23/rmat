@@ -1,10 +1,10 @@
-Package: rmat
+Package: RMat
 Type: Package
-Title: Simulate Random Matrices and Stochastic Mixing Times
-Version: 0.1.0
+Title: Random Matrices and Ensembles
+Version: 0.1.1
 Author: Ali Taqi
 Maintainer: Ali Taqi <alif.taqi00@gmail.com>
-Description: Seamlessly simulate random matrices and ensembles and study mixing time statistics on the ensemble level
-License: What license is it under?
+Description: Simulate common classes of random matrices and ensembles
+License: Common License
 Encoding: UTF-8
 LazyData: true
