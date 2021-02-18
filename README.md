@@ -1,5 +1,7 @@
 ## The 'RMAT' package
 
+(NOTICE: This package is readily developing. Syntax is constantly being optimized and renaming is frequent.)
+
 The RMAT package is developed for simulating various classes of common random matrices and their ensembles. Its primary functionality includes:
 
 - Simulating various random matrices
