@@ -1,19 +1,31 @@
 
 #=================================================================================#
-#                           NORMAL RANDOM MATRICES 
+#                           NORMAL RANDOM MATRICES
 #=================================================================================#
 
+#' Generate a random matrix with normally distributed entries
+#'
+#' @param N Number of dimensions of the square matrix
+#' @param mean Mean of entries
+#' @param sd Standard deviation of entries
+#' @param symm Indicates whether the matrix should be symmetric; equal to its transpose.
+#' @param complex Indicates whether the matrix should have complex entries.
+#' @param hermitian Indicates whether the matrix should be hermitian; equal to its conjugate transpose.
+#' @return A random matrix with normally distributed entries.
+#' @examples
+#' RM_norm(N = 3, mean = 1, sd = 2)
+#' RM_norm(N = 3, symm = TRUE)
 RM_norm <- function(N, mean = 0, sd = 1, symm = F, complex = F, hermitian = F){
   # Create [n x n] matrix with normally distributed entries
-  P <- matrix(rnorm(N^2, mean, sd), nrow = N)  
+  P <- matrix(rnorm(N^2, mean, sd), nrow = N)
   # Make symmetric if prompted
   if(symm || hermitian){P <- .make_hermitian(P)}
   # Returns a matrix with complex entries if prompted
   if(complex){
     if(hermitian){
-      P <- P + .make_hermitian(1i * RM_normal(N, mean, sd, symm = T))
+      P <- P + .make_hermitian(1i * RM_norm(N, mean, sd))
     } else{
-      P <- P + 1i * RM_normal(N, mean, sd, symm = F)
+      P <- P + 1i * RM_norm(N, mean, sd, symm = F)
     }
   }
   P <- P/sqrt(N) # Rescale the matrix
@@ -23,8 +35,7 @@ RM_norm <- function(N, mean = 0, sd = 1, symm = F, complex = F, hermitian = F){
 # Generate a Gaussian (Hermite) Beta Ensemble matrix with Non-Invariant Dumitriu's Tridiagonal Model
 RM_beta <- function(N, beta, complex = F){
   # Set the diagonal as a N(0,2) distributed row.
-  diagonal <- rnorm(N, mean = 0, sd = 2)
-  P <- diag(diagonal)
+  P <- diag(rnorm(N, mean = 0, sd = 2))
   # Set the off-1 diagonals as chi squared variables with df(beta), as given in Dumitriu's model
   df_seq <- beta*(N - seq(1,N-1)) # Get degrees of freedom sequence for offdigonal
   P[row(P) - col(P) == 1] <- P[row(P) - col(P) == -1] <- rchisq(N-1, df_seq) # Generate tridiagonal
@@ -36,14 +47,14 @@ RM_beta <- function(N, beta, complex = F){
 
 # Generate a tridiagonal matrix with normal entries
 RM_trid <- function(N, symm = F){
-  diagonal <- rnorm(N = N, 0, 2)
+  diagonal <- rnorm(n = N, 0, 2)
   P <- diag(diagonal)
-  P[row(P) - col(P) == 1] <- P[row(P) - col(P) == -1] <- rnorm(n = n, 0, 1)
+  P[row(P) - col(P) == 1] <- P[row(P) - col(P) == -1] <- rnorm(n = N, 0, 1)
   P # Return the matrix
 }
 
 #=================================================================================#
-#                           STOCHASTIC RANDOM MATRICES 
+#                           STOCHASTIC RANDOM MATRICES
 #=================================================================================#
 
 # Generate random stochastic matrix of size n, with choice of row function {r_stoch, r_stoch_zeros}
@@ -52,7 +63,7 @@ RM_stoch <- function(N, symm = F, sparsity = F){
   # Generate the [N x N] stochastic matrix stacking N stochastic rows (using the chosen function)
   P <- do.call("rbind", lapply(X = rep(N, N), FUN = row_fxn))
   if(symm){ # Make symmetric (if prompted)
-    P <- .make_hermitian(P) # Make lower and upper triangles equal
+    P <- .make_hermitian(P) # Make lower and upper triangles equal to each other's conjugate transpose
     diag(P) <- rep(0, N) # Nullify diagonal
     for(i in 1:N){P[i, ] <- P[i, ]/sum(P[i, ])} # Normalize rows
     # Set diagonal to the diff. between 1 and the non-diagonal entry sums such that rows sum to 1
@@ -64,12 +75,12 @@ RM_stoch <- function(N, symm = F, sparsity = F){
 }
 
 # An Erdos-Renyi Graph is a graph whose edges are connected ~ Bern(p).
-# This simulates a transition matrix for a random walk on an ER-p graph, where p = p_sparse.
+# This simulates a transition matrix for a random walk on an ER-p graph
 RM_erdos <- function(N, p, stoch = T){
-  # Generate an [N x N] Erdos-Renyi walk stochastic matrix by stacking N p-stochastic rows (using the chosen function)
+  # Generate an [N x N] Erdos-Renyi walk stochastic matrix by stacking N p-stochastic rows
   P <- do.call("rbind", lapply(X = rep(N, N), FUN = .stoch_row_erdos, p = p))
   # If the matrix is to be truly stochastic, map rows with all zeros to have diagonal entry 1
-  if(stoch){  
+  if(stoch){
     # Set diagonal to ensure that rows sum to 1
     diag <- rep(0, N)
     for(i in 1:N){diag[i] <- (1 - sum(.nondiagonal_entries(row = P[i, ], row_index = i)))}
@@ -118,21 +129,20 @@ RM_erdos <- function(N, p, stoch = T){
       if(i < j){P[i,j] <- Conj(P[j,i])} # Equalize lower and upper triangles, making conjugate if complex
     }
   }
-  P # Return Symmetric Matrix
+  P # Return Hermitian Matrix
 }
 
 # Return the non-diagonal entries of row i
-.nondiagonal_entries <- function(row, row_index){
-  row[which(1:length(row) != row_index)]
-  }
+.nondiagonal_entries <- function(row, row_index){row[which(1:length(row) != row_index)]}
+
+#=========================================================================#
+#                         DIAGNOSTIC FUNCTIONS
+#=========================================================================#
 
 # Check if a matrix is stochastic
 .isStochastic <- function(P){
   row_is_stoch <- rep(F, nrow(P))
-  for(i in 1:nrow(P)){
-    row_sum <- sum(P[i,])
-    row_is_stoch[i] <- (row_sum == 1)
-  }
+  for(i in 1:nrow(P)){row_is_stoch[i] <- (sum(P[i,]) == 1)} # Row is stochastic when it sums to 1.
   !(F %in% row_is_stoch)
 }
 
@@ -140,5 +150,5 @@ RM_erdos <- function(N, p, stoch = T){
 .pos_entries <- function(P, zero = F){
   if(!zero){pos_entries <- length(matrix(P[P[,] > 0], nrow = 1))}
   else{pos_entries <- length(matrix(P[P[,] >= 0], nrow = 1))}
-  pos_entries/(length(P))   
+  pos_entries/(length(P))
 }

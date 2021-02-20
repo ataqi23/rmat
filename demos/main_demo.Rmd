@@ -11,6 +11,6 @@ library(RMAT)
 ```
 
 ```{r}
-RM_normal(N = 5, complex = T, hermitian = T)
+RM_norm(N = 5, 
 ```
 
