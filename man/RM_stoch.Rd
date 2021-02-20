@@ -17,7 +17,8 @@ RM_stoch(N, symm = F, sparsity = F)
 A random stochastic matrix.
 }
 \description{
-Generate a random stochastic matrix
+A (row-)stochastic matrix is a matrix whose rums sum to 1. There is a natural one-to-one corrospondence between
+  stochastic matrices and Markov Chains; this is so when its i,j entry represent the transition probability from state i to state j.
 }
 \examples{
 P <- RM_stoch(N = 3)

@@ -2,8 +2,7 @@
 % Please edit documentation in R/matrices.R
 \name{RM_erdos}
 \alias{RM_erdos}
-\title{Generates a random stochastic matrix for a walk on an Erdos-Renyi graph
-An Erdos-Renyi Graph is a graph whose edges are connected ~ Bern(p). Alternatively, this could be thought of as a stochastic matrix with parameterized sparsity.}
+\title{Generate a random stochastic matrix for a walk on an Erdos-Renyi graph}
 \usage{
 RM_erdos(N, p, stoch = T)
 }
@@ -12,18 +11,21 @@ RM_erdos(N, p, stoch = T)
 
 \item{p}{the probability two vertices are connected in an Erdos-Renyi graph.}
 
-\item{stoch}{indicates whether the matrix should be stochastic; changing this parameter may lead to the function returning invalid transition matrices.}
+\item{stoch}{indicates whether the matrix should be stochastic;
+changing this parameter may lead to the function returning invalid transition matrices.}
 }
 \value{
 A random stochastic matrix corrosponding to a walk on an Erdos-Renyi graph with probability p.
 }
 \description{
-Generates a random stochastic matrix for a walk on an Erdos-Renyi graph
-An Erdos-Renyi Graph is a graph whose edges are connected ~ Bern(p). Alternatively, this could be thought of as a stochastic matrix with parameterized sparsity.
+An Erdos-Renyi Graph is a graph whose edges are connected ~ Bern(p).
+ Hence, its transition matrix will have nonzero entries with that probability.
+ So, we can alternatively think of the transition matrix for such walk as a stochastic matrix with parameterized sparsity.
 }
 \examples{
-P <- RM_stoch(N = 3)
-P <- RM_stoch(N = 9, sparsity = TRUE)
-Q <- RM_stoch(N = 9, symm = TRUE)
-Q <- RM_stoch(N = 9, symm = TRUE, sparsity = TRUE)
+P <- RM_erdos(N = 3, p = 0.2) # Very sparse graph
+P <- RM_erdos(N = 5, p = 1) # Completely connected graph
+P <- RM_erdos(N = 9, p = 0.6)
+# May yield invalid transition matrix.
+Q <- RM_erdos(N = 5, p = 0.3, stoch = FALSE)
 }

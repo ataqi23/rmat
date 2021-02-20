@@ -3,14 +3,19 @@
 #                           NORMAL RANDOM MATRICES
 #=================================================================================#
 
-#' Generate normally distributed random matrix
+#' @title Generate a normal random matrix
+#'
+#' @description Normal random matrices are matrices with normally distributed entries. These matrices
+#'  are extensively studied in random matrix theory.
 #'
 #' @param N number of dimensions of the square matrix
 #' @param mean mean of the normal distribution of entries
 #' @param sd standard deviation of the normal distribution of entries
-#' @param symm indicates whether the matrix should be symmetric (equal to its transpose). Reserved for when complex = F, otherwise use hermitian = T.
+#' @param symm indicates whether the matrix should be symmetric (equal to its transpose).
+#'   Reserved for when complex = F, otherwise use hermitian = T.
 #' @param cplx indicates whether the matrix should have complex entries.
-#' @param herm indicates whether the matrix should be hermitian (equal to its conjugate transpose). Reserved for when complex = T, otherwise use symm = T.
+#' @param herm indicates whether the matrix should be hermitian (equal to its conjugate transpose).
+#'   Reserved for when complex = T, otherwise use symm = T.
 #' @return A random matrix with normally distributed entries.
 #' @examples
 #' P <- RM_norm(N = 3, mean = 1, sd = 2)
@@ -33,7 +38,11 @@ RM_norm <- function(N, mean = 0, sd = 1, symm = F, cplx = F, herm = F){
   P # Return the matrix
 }
 
-#' Generate a Gaussian (Hermite) Beta Ensemble matrix with Dumitriu's Non-Invariant Tridiagonal Model
+#' @title Generate a Gaussian/Hermite \eqn{\beta}-matrix
+#'
+#' @description Gaussian-\eqn{\beta} ensemble matrices are matrices with normal entries and beta real number components.
+#'   Using Dumitriu's tridiagonal model, this function is an implementation of the generalized, but not necessarily invariant,
+#'   beta ensembles for \eqn{\beta} > 0.
 #'
 #' @param N number of dimensions of the square matrix
 #' @param beta the value of the beta parameter for the beta ensemble
@@ -73,7 +82,10 @@ RM_trid <- function(N, symm = F){
 #                           STOCHASTIC RANDOM MATRICES
 #=================================================================================#
 
-#' Generate a random stochastic matrix
+#' @title Generate a random stochastic matrix
+#'
+#' @description A (row-)stochastic matrix is a matrix whose rums sum to 1. There is a natural one-to-one corrospondence between
+#'   stochastic matrices and Markov Chains; this is so when its i,j entry represent the transition probability from state i to state j.
 #'
 #' @param N number of dimensions of the square matrix
 #' @param symm indicates whether the matrix should be symmetric; equal to its transpose.
@@ -100,18 +112,23 @@ RM_stoch <- function(N, symm = F, sparsity = F){
   P # Return the matrix
 }
 
-#' Generates a random stochastic matrix for a walk on an Erdos-Renyi graph
-#' An Erdos-Renyi Graph is a graph whose edges are connected ~ Bern(p). Alternatively, this could be thought of as a stochastic matrix with parameterized sparsity.
+#' @title Generate a random stochastic matrix for a walk on an Erdos-Renyi graph
+#'
+#' @description An Erdos-Renyi Graph is a graph whose edges are connected ~ Bern(p).
+#'  Hence, its transition matrix will have nonzero entries with that probability.
+#'  So, we can alternatively think of the transition matrix for such walk as a stochastic matrix with parameterized sparsity.
 #'
 #' @param N number of dimensions of the square matrix
 #' @param p the probability two vertices are connected in an Erdos-Renyi graph.
-#' @param stoch indicates whether the matrix should be stochastic; changing this parameter may lead to the function returning invalid transition matrices.
+#' @param stoch indicates whether the matrix should be stochastic;
+#'   changing this parameter may lead to the function returning invalid transition matrices.
 #' @return A random stochastic matrix corrosponding to a walk on an Erdos-Renyi graph with probability p.
 #' @examples
-#' P <- RM_stoch(N = 3, p = 0.2) # Very sparse graph
-#' P <- RM_stoch(N = 9, p = 0.6)
-#' P <- RM_stoch(N = 5, p = 1) # Completely connected graph
-#' Q <- RM_stoch(N = 5, p = 0.3) # May return invalid transition matrix.
+#' P <- RM_erdos(N = 3, p = 0.2) # Very sparse graph
+#' P <- RM_erdos(N = 5, p = 1) # Completely connected graph
+#' P <- RM_erdos(N = 9, p = 0.6)
+#' # May yield invalid transition matrix.
+#' Q <- RM_erdos(N = 5, p = 0.3, stoch = FALSE)
 RM_erdos <- function(N, p, stoch = T){
   # Generate an [N x N] Erdos-Renyi walk stochastic matrix by stacking N p-stochastic rows
   P <- do.call("rbind", lapply(X = rep(N, N), FUN = .stoch_row_erdos, p = p))

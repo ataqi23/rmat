@@ -8,10 +8,15 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(RMAT)
+?RM_norm
+?RM_erdos
+?RM_stoch
+?RM_beta
+?RM_trid
 ```
 
 ```{r}
-RM_
+RM_norm(N = 3, mean = 0, )
 ```
 
 

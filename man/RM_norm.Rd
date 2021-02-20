@@ -2,28 +2,31 @@
 % Please edit documentation in R/matrices.R
 \name{RM_norm}
 \alias{RM_norm}
-\title{Generate normally distributed random matrix}
+\title{Generate a normal random matrix}
 \usage{
 RM_norm(N, mean = 0, sd = 1, symm = F, cplx = F, herm = F)
 }
 \arguments{
 \item{N}{number of dimensions of the square matrix}
 
-\item{mean}{mean of normal distribution of entries}
+\item{mean}{mean of the normal distribution of entries}
 
-\item{sd}{standard deviation normal distribution of entries}
+\item{sd}{standard deviation of the normal distribution of entries}
 
-\item{symm}{indicates whether the matrix should be symmetric; equal to its transpose. Reserved for when complex = F, otherwise use hermitian = T.}
+\item{symm}{indicates whether the matrix should be symmetric (equal to its transpose).
+Reserved for when complex = F, otherwise use hermitian = T.}
 
 \item{cplx}{indicates whether the matrix should have complex entries.}
 
-\item{herm}{indicates whether the matrix should be hermitian; equal to its conjugate transpose. Reserved for when complex = T, otherwise use hermitian = F.}
+\item{herm}{indicates whether the matrix should be hermitian (equal to its conjugate transpose).
+Reserved for when complex = T, otherwise use symm = T.}
 }
 \value{
 A random matrix with normally distributed entries.
 }
 \description{
-Generate normally distributed random matrix
+Normal random matrices are matrices with normally distributed entries. These matrices
+ are extensively studied in random matrix theory.
 }
 \examples{
 P <- RM_norm(N = 3, mean = 1, sd = 2)
