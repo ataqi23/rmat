@@ -15,6 +15,7 @@ The matrices included are:
 - Generalized Beta Ensemble for b > 0
 - Stochastic Matrices
 - Stochastic Matrices with parameterized sparsity
+- Tridiagonal Matrices
 - Band Matrices
 
 For some matrices, there are included free parameters in the relevant functions:
