@@ -1,2 +1,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^RMAT\.Rproj$
+pull.sh
+documentation
+demos
+^LICENSE\.md$

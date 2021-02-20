@@ -4,12 +4,14 @@ Title: Random Matrices and Ensembles
 Version: 0.1.1
 Author: Ali Taqi
 Maintainer: Ali Taqi <alif.taqi00@gmail.com>
-Description: Simulate common classes of random matrices and ensembles
-License: Common License
+Description: Simulate common classes of random matrices and ensembles and visualize their eigenvalue spectra.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Imports:
   tidyverse,
   purrr,
-  stats
+  stats,
+  ggplot2
+Suggests:

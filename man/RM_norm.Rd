@@ -2,30 +2,32 @@
 % Please edit documentation in R/matrices.R
 \name{RM_norm}
 \alias{RM_norm}
-\title{Generate a random matrix with normally distributed entries}
+\title{Generate normally distributed random matrix}
 \usage{
-RM_norm(N, mean = 0, sd = 1, symm = F, complex = F, hermitian = F)
+RM_norm(N, mean = 0, sd = 1, symm = F, cplx = F, herm = F)
 }
 \arguments{
-\item{N}{Number of dimensions of the square matrix}
+\item{N}{number of dimensions of the square matrix}
 
-\item{mean}{Mean of entries}
+\item{mean}{mean of normal distribution of entries}
 
-\item{sd}{Standard deviation of entries}
+\item{sd}{standard deviation normal distribution of entries}
 
-\item{symm}{Indicates whether the matrix should be symmetric; equal to its transpose.}
+\item{symm}{indicates whether the matrix should be symmetric; equal to its transpose. Reserved for when complex = F, otherwise use hermitian = T.}
 
-\item{complex}{Indicates whether the matrix should have complex entries.}
+\item{cplx}{indicates whether the matrix should have complex entries.}
 
-\item{hermitian}{Indicates whether the matrix should be hermitian; equal to its conjugate transpose.}
+\item{herm}{indicates whether the matrix should be hermitian; equal to its conjugate transpose. Reserved for when complex = T, otherwise use hermitian = F.}
 }
 \value{
 A random matrix with normally distributed entries.
 }
 \description{
-Generate a random matrix with normally distributed entries
+Generate normally distributed random matrix
 }
 \examples{
-RM_norm(N = 3, mean = 1, sd = 2)
-RM_norm(N = 3, symm = TRUE)
+P <- RM_norm(N = 3, mean = 1, sd = 2)
+P <- RM_norm(N = 7, sd = 5, symm = TRUE)
+Q <- RM_norm(N = 7, cplx = TRUE)
+Q <- RM_norm(N = 5, mean = 0, cplx = TRUE, herm = TRUE)
 }

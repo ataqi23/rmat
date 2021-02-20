@@ -1,3 +1,4 @@
 exportPattern("^[[:alpha:]]+")
-import("tidyverse")
+import("ggplot2")
 importFrom("stats", "density", "dnorm", "rbinom", "rchisq", "rnorm","runif", "var")
+

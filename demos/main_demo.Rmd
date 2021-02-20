@@ -11,6 +11,14 @@ library(RMAT)
 ```
 
 ```{r}
-RM_norm(N = 5, 
+RM_
+```
+
+
+```{r}
+P <- RM_norm(N = 10, complex = T)
+.visualize_normal_entries(P)
+P <- RM_erdos(N = 10, p = 0.5)
+.visualize_entries(P)
 ```
 
