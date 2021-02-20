@@ -1,0 +1,18 @@
+---
+title: "Tests"
+author: "Ali Taqi"
+date: "2/19/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r}
+#test ideas
+
+```
+

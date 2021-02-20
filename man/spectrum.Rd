@@ -24,7 +24,7 @@ Q <- matrix(runif(2^2), ncol = 2)
 spectrum_Q <- spectrum(Q)
 
 # Eigenvalue spectra of ensemble matrices
-#ensemble <- RME("norm", args = c(N = 3), ensemble_size = 10)
-#ensemble_spectrum <- spectrum(ensemble)
+ensemble <- RME("norm", args = c(N = 3), ensemble_size = 10)
+ensemble_spectrum <- spectrum(ensemble)
 
 }

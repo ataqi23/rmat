@@ -20,14 +20,14 @@ Returns a scatterplot of the eigenvalues of a random matrix or ensemble.
 \examples{
 # Eigenvalue spectrum of a matrix
 P <- RM_norm(N = 5)
-#spectrum_plot(P)
+spectrum_plot(P)
 
 # Labelled spectrum plot of a beta matrix
 Q <- RM_beta(N = 4, beta = 2)
-#spectrum_plot(Q, mat_str = "Beta")
+spectrum_plot(Q, mat_str = "Beta")
 
 # Eigenvalue spectra of ensemble matrices
-#ensemble <- RME("norm", args = c(N = 3), ensemble_size = 10)
-#spectrum_plot(ensemble)
+ensemble <- RME("norm", args = c(N = 3), ensemble_size = 10)
+spectrum_plot(ensemble)
 
 }
