@@ -24,4 +24,5 @@ Gaussian-\eqn{\beta} ensemble matrices are matrices with normal entries and beta
 \examples{
 P <- RM_beta(N = 3, beta = 4)
 P <- RM_beta(N = 10, beta = 17)
+
 }

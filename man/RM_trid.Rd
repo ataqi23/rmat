@@ -19,5 +19,8 @@ Generate a tridiagonal matrix with normal entries
 }
 \examples{
 P <- RM_trid(N = 3)
+
+# Symmetric tridiagonal matrix
 P <- RM_trid(N = 9, symm = TRUE)
+
 }

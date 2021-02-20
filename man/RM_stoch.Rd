@@ -25,4 +25,5 @@ P <- RM_stoch(N = 3)
 P <- RM_stoch(N = 9, sparsity = TRUE)
 Q <- RM_stoch(N = 9, symm = TRUE)
 Q <- RM_stoch(N = 9, symm = TRUE, sparsity = TRUE)
+
 }

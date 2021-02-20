@@ -29,8 +29,16 @@ Normal random matrices are matrices with normally distributed entries. These mat
  are extensively studied in random matrix theory.
 }
 \examples{
+# N(1,2) distributed matrix
 P <- RM_norm(N = 3, mean = 1, sd = 2)
+
+# N(0,5) distributed matrix with real symmetric entries
 P <- RM_norm(N = 7, sd = 5, symm = TRUE)
+
+# 7x7 standard normal matrix with complex entries
 Q <- RM_norm(N = 7, cplx = TRUE)
-Q <- RM_norm(N = 5, mean = 0, cplx = TRUE, herm = TRUE)
+
+# N(2,1) distributed matrix with hermitian complex entries
+Q <- RM_norm(N = 5, mean = 2, cplx = TRUE, herm = TRUE)
+
 }

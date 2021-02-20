@@ -23,9 +23,15 @@ An Erdos-Renyi Graph is a graph whose edges are connected ~ Bern(p).
  So, we can alternatively think of the transition matrix for such walk as a stochastic matrix with parameterized sparsity.
 }
 \examples{
-P <- RM_erdos(N = 3, p = 0.2) # Very sparse graph
-P <- RM_erdos(N = 5, p = 1) # Completely connected graph
+# Very sparse graph
+P <- RM_erdos(N = 3, p = 0.2)
+
 P <- RM_erdos(N = 9, p = 0.6)
+
+# Completely connected graph
+P <- RM_erdos(N = 5, p = 1)
+
 # May yield invalid transition matrix.
 Q <- RM_erdos(N = 5, p = 0.3, stoch = FALSE)
+
 }
