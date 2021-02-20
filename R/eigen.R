@@ -50,6 +50,9 @@ spectrum <- function(array){
   do.call("rbind",lapply(X = 1:length(ensemble), FUN = function(i){spectrum(ensemble[[i]])})) # Return the spectra for this ensemble
 }
 
+# Read in the eigenvalue in the Kth row from a eigenvalue array and return a numerical
+.read_eigenvalue <- function(spectrum, K){complex(real = spectrum[K,1], imaginary = spectrum[K,2])}
+
 #=================================================================================#
 #                         SPECTRUM VISUALIZATION FUNCTIONS
 #=================================================================================#
@@ -109,9 +112,3 @@ spectrum_plot <- function(array, mat_str = ""){
     #coord_fixed(ratio = 1)
 }
 
-#=================================================================================#
-#                               HELPER FUNCTIONS
-#=================================================================================#
-
-# Read in the eigenvalue in the Kth row from a eigenvalue array and return a numerical
-.read_eigenvalue <- function(spectrum, K){complex(real = spectrum[K,1], imaginary = spectrum[K,2])}
