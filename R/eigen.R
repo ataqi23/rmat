@@ -80,7 +80,7 @@ spectrum <- function(array){
 #'
 spectrum_plot <- function(array, mat_str = ""){
   # See if we have a ensemble of matrices or a single matrix
-  is_ensemble <- (class(array) == "list")
+  is_ensemble <- (class(array) != "matrix")
   # If not ensemble, directly process the spectrum of the matrix
   if(!is_ensemble){
     P <- array # Rename matrix

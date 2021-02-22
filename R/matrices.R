@@ -62,12 +62,12 @@ RM_norm <- function(N, mean = 0, sd = 1, symm = F, cplx = F, herm = F){
 #'
 RM_beta <- function(N, beta, cplx = F){
   # Set the diagonal as a N(0,2) distributed row.
-  P <- diag(rnorm(N, mean = 0, sd = 2))
+  P <- diag(rnorm(N, mean = 0, sd = sqrt(2)))
   # Set the off-1 diagonals as chi squared variables with df(beta), as given in Dumitriu's model
-  df_seq <- beta*(N - seq(1,N-1)) # Get degrees of freedom sequence for offdigonal
-  P[row(P) - col(P) == 1] <- P[row(P) - col(P) == -1] <- rchisq(N-1, df_seq) # Generate tridiagonal
+  df_seq <- beta*(N - seq(1, N-1)) # Get degrees of freedom sequence for offdigonal
+  P[row(P) - col(P) == 1] <- P[row(P) - col(P) == -1] <- sqrt(rchisq(N-1, df_seq)) # Generate tridiagonal
   # Add complex entries, if prompted
-  if(cplx){P <- P + .make_hermitian((1i * RM_beta(N, beta)))}
+  #if(cplx){P <- P + .make_hermitian((1i * RM_beta(N, beta)))}
   P <- P/sqrt(2) # Rescale the entries by 1/sqrt(2)
   P # Return the matrix
 }
