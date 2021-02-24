@@ -1,16 +1,17 @@
 
 # This script includes functions that help extract and plot eigenvalues of matrices.
 
-
 #=================================================================================#
-#                              SPECTRUM FUNCTIONS
+#                              EIGENVALUE DISPERSION
 #=================================================================================#
 
-#' @title Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.
+#' @title Obtain the dispersion of eigenvalues of a matrix or ensemble of matrices.
 #'
-#' @description Returns a tidied dataframe of the eigenvalues of a random matrix or ensemble.
+#' @description Returns a vector of the eigenvalues dispersions of a random matrix or ensemble.
 #'
 #' @param array a square matrix or matrix ensemble whose eigenvalues are to be returned
+#' @param components returns the array with resolved real and imaginary components; otherwise returns complex-valued eigenvalues
+#' @param norm use the norm metric for eigenvalue dispersion; otherwise returns absolute dispersion metric
 #'
 #' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
 #' @examples
@@ -22,17 +23,82 @@
 #' spectrum_Q <- spectrum(Q)
 #'
 #' # Eigenvalue spectra of ensemble matrices
-#' ensemble <- RME("norm", args = c(N = 3), ensemble_size = 10)
+#' ensemble <- RME_norm(N = 3, size = 10)
 #' ensemble_spectrum <- spectrum(ensemble)
 #'
-spectrum <- function(array, largest = F, smallest = F){
+dispersion <- function(array, components = T, norm = T){
   # Infer type of array (matrix or ensemble) then parse accordingly.
   is_ensemble <- (class(array) == "list")
+  round <- 5
+  # One type of array is inferred, obtain the differences array
+  if(!is_ensemble){
+    P <- array
+    diffs <- .eigen_deltas(P, norm)
+  }
+  # Otherwise, recursively obtain the ensemble's spectrum by row binding each matrix's returned differences
+  else{
+    ensemble <- array
+    diffs <- purrr::map_dfr(.x = ensemble, .f = .eigen_deltas)
+  }
+  # Return differences
+  diffs
+}
+
+# Find the eigenvalue dispersion of a given matrix
+.eigen_deltas <- function(P, norm = T){
+  eigenvalues <- data.frame(values = eigen(P)$values)
+  N <- nrow(P)
+  diffs <- rep(0,N*(N-1)/2)
+  k <- 0
+  # Run over entry of the matrix
+  for(i in 1:N){
+    for(j in 1:N){
+      # Restrict view to one of the triangles; (i < j): Lower Triangles
+      if(i < j){
+        k <- k + 1
+        if(!norm){diffs[k] <- eigenvalues[i,] - eigenvalues[j,]}
+        else{diffs[k] <- abs(eigenvalues[i,] - eigenvalues[j,])}
+      }
+    }
+  }
+  data.frame(diff = diffs) # Return eigenvalue differences
+}
+
+#=================================================================================#
+#                              SPECTRUM FUNCTIONS
+#=================================================================================#
+
+#' @title Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.
+#'
+#' @description Returns a tidied dataframe of the eigenvalues of a random matrix or ensemble.
+#'
+#' @param array a square matrix or matrix ensemble whose eigenvalues are to be returned
+#' @param components returns the array with resolved real and imaginary components; otherwise returns complex-valued eigenvalues
+#' @param largest returns the largest eigenvalues of the matrix (ensemble)
+#' @param smallest returns the smallest eigenvalues of the matrix (ensemble)
+#'
+#' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
+#' @examples
+#' # Eigenvalue spectrum of a matrix
+#' P <- RM_norm(N = 5)
+#' spectrum_P <- spectrum(P)
+#'
+#' Q <- matrix(runif(2^2), ncol = 2)
+#' spectrum_Q <- spectrum(Q)
+#'
+#' # Eigenvalue spectra of ensemble matrices
+#' ensemble <- RME_norm(N = 3, size = 10)
+#' ensemble_spectrum <- spectrum(ensemble)
+#'
+spectrum <- function(array, components = T, largest = F, smallest = F){
+  # Infer type of array (matrix or ensemble) then parse accordingly.
+  is_ensemble <- (class(array) == "list")
+  round <- 5
   # One type of array is inferred, obtain the eigenvalue array
   if(!is_ensemble){
-    P <- array 
+    P <- array
     eigen_array <- data.frame(eigen(P)$values) # Get eigenvalues of matrix
-    spectrum_row <- function(i, tbl){c(round(Re(tbl[i,]), 5), round(Im(tbl[i,]), 5), abs(tbl[i,]), i)}
+    spectrum_row <- function(i, tbl){c(round(Re(tbl[i,]), round), round(Im(tbl[i,]), round), abs(tbl[i,]), i)}
     eigenvalues <- do.call("rbind", lapply(X = 1:nrow(P), FUN = spectrum_row, tbl = eigen_array)) # Extract eigenvalues
     eigenvalues <- data.frame(eigenvalues) # Array of eigenvalues
     colnames(eigenvalues) <- c("Re", "Im", "Norm", "Order") # Rename columns
@@ -51,8 +117,11 @@ spectrum <- function(array, largest = F, smallest = F){
 }
 
 # Returns largest eigenvalues of the matrix
-.LRGST <- function(spectrum){}
-.SMLST <- function(spectrum){spectrum[which(spectrum$Index == 1)]}
+.SMLST <- function(spectrum){
+  smlst_index <- which.max(spectrum$Index)
+  spectrum[which(spectrum$Index == smlst_index)]
+}
+.LRGST <- function(spectrum){spectrum[which(spectrum$Index == 1)]}
 
 # Helper function for spectrum, returns a tidied dataframe of the eigenvalues of a matrix ensemble input
 .ensemble_spectrum <- function(ensemble){
@@ -81,15 +150,15 @@ spectrum <- function(array, largest = F, smallest = F){
 #' @examples
 #' # Eigenvalue spectrum of a matrix
 #' P <- RM_norm(N = 5)
-#' spectrum_plot(P)
+#' spectrum.plot(P)
 #'
 #' # Labelled spectrum plot of a beta matrix
 #' Q <- RM_beta(N = 4, beta = 2)
-#' spectrum_plot(Q, mat_str = "Beta")
+#' spectrum.plot(Q, mat_str = "Beta")
 #'
 #' # Eigenvalue spectra of ensemble matrices
-#' ensemble <- RME("norm", args = c(N = 3), ensemble_size = 10)
-#' spectrum_plot(ensemble)
+#' ensemble <- RME_norm(N = 3, size = 10)
+#' spectrum.plot(ensemble)
 #'
 spectrum.plot <- function(array, mat_str = ""){
   # Process spectrum of the matrix/ensemble
