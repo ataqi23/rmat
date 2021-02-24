@@ -10,5 +10,5 @@ rm -rf R/matrices-diagnostics.R
 cp ../thesis-taqi/R/eigen.R R/eigen.R
 cp ../thesis-taqi/R/ensemble.R R/ensemble.R
 cp ../thesis-taqi/R/matrices.R R/matrices.R
-cp ../thesis-taqi/R/matrices-diagnostics.R R/matrices-diagnostics.R
+cp ../thesis-taqi/R/mat-diag.R R/mat-diag.R
 
