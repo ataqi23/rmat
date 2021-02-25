@@ -5,13 +5,13 @@
 #                              EIGENVALUE DISPERSION
 #=================================================================================#
 
-#' @title Obtain the dispersion of eigenvalues of a matrix or ensemble of matrices.
+#' @title Obtain the eigenvalue spacings of a matrix or ensemble of matrices.
 #'
-#' @description Returns a vector of the eigenvalues dispersions of a random matrix or ensemble.
+#' @description Returns a vector of the eigenvalue spacings of a random matrix or ensemble.
 #'
-#' @param array a square matrix or matrix ensemble whose eigenvalues are to be returned
-#' @param components returns the array with resolved real and imaginary components; otherwise returns complex-valued eigenvalues
-#' @param norm use the norm metric for eigenvalue dispersion; otherwise returns absolute dispersion metric
+#' @param array a square matrix or matrix ensemble whose eigenvalue spacings are to be returned
+#' @param components returns the array with resolved real and imaginary components; otherwise returns complex-valued vectors/distances
+#' @param norm use the norm metric for eigenvalue spacing; otherwise returns absolute difference metric
 #'
 #' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
 #' @examples
@@ -62,7 +62,38 @@ dispersion <- function(array, components = T, norm = T){
 #                         DISPERSION VISUALIZATION FUNCTIONS
 #=================================================================================#
 
-
+#' @title Visualize a plot of the eigenvalue difference spectrum of a matrix or ensemble of matrices.
+#'
+#' @description Returns a scatterplot of the eigenvalue spacings of a random matrix or ensemble.
+#'
+#' @param array a square matrix or matrix ensemble whose eigenvalues spacings are to be plotted
+#' @param bins (optional) a string argument of the class of the matrix to label the plot title.
+#'
+#' @return A ggplot object containing a scatterplot of the matrix/matrix ensemble's eigenvalue spacings.
+#' @examples
+#' # Eigenvalue spacings plot of a normal matrix
+#' P <- RM_norm(N = 5)
+#' dispersion.plot(P)
+#'
+#' # Eigenvalue spacings plot of a beta matrix
+#' Q <- RM_beta(N = 4, beta = 2)
+#' dispersion.plot(Q, mat_str = "Beta")
+#'
+#' # Eigenvalue spacings plot of an ensemble of normal matrices
+#' ensemble <- RME_norm(N = 3, size = 10)
+#' dispersion.plot(ensemble)
+#'
+dispersion.plot <- function(array, bins = 100){
+  entries <- dispersion(array)
+  num_entries <- length(entries) # Get number of entries
+  # Plot parameters
+  color0 <- "darkorchid4"
+  # Return plot
+  ggplot(data = entries, aes(x = diff)) +
+    geom_histogram(mapping = aes(y = stat(count / num_entries)), fill = color0, bins = bins)+
+    scale_fill_discrete(c("")) +
+    labs(title = "Distribution of Eigenvalue Spacings", y = "Probability")
+}
 
 #=================================================================================#
 #                              SPECTRUM FUNCTIONS
@@ -148,7 +179,7 @@ spectrum <- function(array, components = T, largest = F, smallest = F){
 #'
 #' @return A ggplot object containing a scatterplot of the matrix/matrix ensemble's spectrum.
 #' @examples
-#' # Eigenvalue spectrum of a matrix
+#' # Eigenvalue spectrum plot of a matrix
 #' P <- RM_norm(N = 5)
 #' spectrum.plot(P)
 #'
@@ -156,7 +187,7 @@ spectrum <- function(array, components = T, largest = F, smallest = F){
 #' Q <- RM_beta(N = 4, beta = 2)
 #' spectrum.plot(Q, mat_str = "Beta")
 #'
-#' # Eigenvalue spectra of ensemble matrices
+#' # Eigenvalue spectra plot of an ensemble of normal matrices
 #' ensemble <- RME_norm(N = 3, size = 10)
 #' spectrum.plot(ensemble)
 #'
