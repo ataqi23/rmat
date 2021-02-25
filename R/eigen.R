@@ -18,18 +18,18 @@
 #'
 #' # Eigenvalue dispersion of a normal matrix
 #' P <- RM_norm(N = 5)
-#' disp_P <- dispersion(P)
+#' #disp_P <- dispersion(P)
 #'
 #' # Eigenvalue dispersion of a stochastic matrix
 #' Q <- RM_stoch(N = 5)
-#' disp_Q <- dispersion(Q)
+#' #disp_Q <- dispersion(Q)
 #'
 #' # Eigenvalue dispersion of an ensemble
 #' ensemble <- RME_norm(N = 3, size = 10)
-#' disp_ensemble <- dispersion(ensemble)
+#' #disp_ensemble <- dispersion(ensemble)
 #'
 #' # Alternatively, use the pipe
-#' disp_ensemble <- RME_norm(N = 3, size = 10) %>% dispersion()
+#' #disp_ensemble <- RME_norm(N = 3, size = 10) %>% dispersion()
 #'
 dispersion <- function(array, components = T, norm = T){
   is_ensemble <- (class(array) == "list") # Infer type of array (matrix or ensemble) then parse accordingly
@@ -73,15 +73,15 @@ dispersion <- function(array, components = T, norm = T){
 #' @examples
 #' # Eigenvalue spacings plot of a normal matrix
 #' P <- RM_norm(N = 5)
-#' dispersion.plot(P)
+#' #dispersion.plot(P)
 #'
 #' # Eigenvalue spacings plot of a beta matrix
 #' Q <- RM_beta(N = 4, beta = 2)
-#' dispersion.plot(Q, mat_str = "Beta")
+#' #dispersion.plot(Q, mat_str = "Beta")
 #'
 #' # Eigenvalue spacings plot of an ensemble of normal matrices
-#' ensemble <- RME_norm(N = 3, size = 10)
-#' dispersion.plot(ensemble)
+#' # ensemble <- RME_norm(N = 3, size = 10)
+#' # dispersion.plot(ensemble)
 #'
 dispersion.plot <- function(array, bins = 100){
   entries <- dispersion(array)

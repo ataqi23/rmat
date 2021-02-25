@@ -23,7 +23,10 @@ Given the same arguments as RM_stoch, this function returns an ensemble of rando
 }
 \examples{
 
-# Generate an ensemble of standard normal 3x3 matrices of size 20
-# ensemble <-
+# Generate an ensemble of random 5x5 transition matrices of size 20.
+ensemble <- RME_stoch(N = 5, size = 20)
+
+# Generate an ensemble of symmetric random 5x5 transition matrices of size 20.
+ensemble <- RME_stoch(N = 5, symm = TRUE, size = 20)
 
 }

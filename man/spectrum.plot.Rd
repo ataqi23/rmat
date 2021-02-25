@@ -18,7 +18,7 @@ A ggplot object containing a scatterplot of the matrix/matrix ensemble's spectru
 Returns a scatterplot of the eigenvalues of a random matrix or ensemble.
 }
 \examples{
-# Eigenvalue spectrum of a matrix
+# Eigenvalue spectrum plot of a matrix
 P <- RM_norm(N = 5)
 spectrum.plot(P)
 
@@ -26,7 +26,7 @@ spectrum.plot(P)
 Q <- RM_beta(N = 4, beta = 2)
 spectrum.plot(Q, mat_str = "Beta")
 
-# Eigenvalue spectra of ensemble matrices
+# Eigenvalue spectra plot of an ensemble of normal matrices
 ensemble <- RME_norm(N = 3, size = 10)
 spectrum.plot(ensemble)
 

@@ -55,7 +55,7 @@ RME_beta <- function(N, beta, size){lapply(X = rep(N, size), FUN = RM_beta, beta
 #' ensemble <- RME_stoch(N = 5, size = 20)
 #'
 #' # Generate an ensemble of symmetric random 5x5 transition matrices of size 20.
-#' ensemble <- RME_stoch(N = 5, symm = T, size = 20)
+#' ensemble <- RME_stoch(N = 5, symm = TRUE, size = 20)
 #'
 RME_stoch <- function(N, ..., size){lapply(X = rep(N, size), FUN = RM_stoch, ...)}
 

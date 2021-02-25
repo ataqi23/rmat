@@ -4,7 +4,7 @@
 \alias{RM_norm}
 \title{Generate a normal random matrix}
 \usage{
-RM_norm(N, mean = 0, sd = 1, symm = F, cplx = F, herm = F)
+RM_norm(N, mean = 0, sd = 1, symm = FALSE, cplx = FALSE, herm = FALSE)
 }
 \arguments{
 \item{N}{number of dimensions of the square matrix}

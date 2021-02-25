@@ -22,7 +22,8 @@ A tidy dataframe with the real & imaginary components of the eigenvalues and the
 Returns a tidied dataframe of the eigenvalues of a random matrix or ensemble.
 }
 \examples{
-# Eigenvalue spectrum of a matrix
+
+# Eigenvalue spectrum of a random normal matrix
 P <- RM_norm(N = 5)
 spectrum_P <- spectrum(P)
 

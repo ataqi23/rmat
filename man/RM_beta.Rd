@@ -20,7 +20,11 @@ Gaussian-\eqn{\beta} ensemble matrices are matrices with normal entries and beta
   beta ensembles for \eqn{\beta} > 0.
 }
 \examples{
+
+# Generate a 3x3 random beta matrix with beta = 4
 P <- RM_beta(N = 3, beta = 4)
-P <- RM_beta(N = 10, beta = 17)
+
+# Generate a 10x10 random beta matrix with beta = 21
+P <- RM_beta(N = 10, beta = 21)
 
 }

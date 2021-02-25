@@ -23,7 +23,7 @@ Given the same arguments as RM_norm, this function returns an ensemble of that p
 }
 \examples{
 
-# Generate an ensemble of standard normal 3x3 matrices of size 20
-# ensemble <-
+# Generate an ensemble of 10x10 beta matrices with beta = 4 of size 100.
+ensemble <- RME_beta(N = 10, beta = 4, size = 100)
 
 }

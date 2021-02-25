@@ -2,33 +2,38 @@
 % Please edit documentation in R/eigen.R
 \name{dispersion}
 \alias{dispersion}
-\title{Obtain the dispersion of eigenvalues of a matrix or ensemble of matrices.}
+\title{Obtain the eigenvalue spacings of a matrix or ensemble of matrices.}
 \usage{
 dispersion(array, components = T, norm = T)
 }
 \arguments{
-\item{array}{a square matrix or matrix ensemble whose eigenvalues are to be returned}
+\item{array}{a square matrix or matrix ensemble whose eigenvalue spacings are to be returned}
 
-\item{components}{returns the array with resolved real and imaginary components; otherwise returns complex-valued eigenvalues}
+\item{components}{returns the array with resolved real and imaginary components; otherwise returns complex-valued vectors/distances}
 
-\item{norm}{use the norm metric for eigenvalue dispersion; otherwise returns absolute dispersion metric}
+\item{norm}{use the norm metric for eigenvalue spacing; otherwise returns absolute difference metric}
 }
 \value{
 A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
 }
 \description{
-Returns a vector of the eigenvalues dispersions of a random matrix or ensemble.
+Returns a vector of the eigenvalue spacings of a random matrix or ensemble.
 }
 \examples{
-# Eigenvalue spectrum of a matrix
+
+# Eigenvalue dispersion of a normal matrix
 P <- RM_norm(N = 5)
-spectrum_P <- spectrum(P)
+#disp_P <- dispersion(P)
 
-Q <- matrix(runif(2^2), ncol = 2)
-spectrum_Q <- spectrum(Q)
+# Eigenvalue dispersion of a stochastic matrix
+Q <- RM_stoch(N = 5)
+#disp_Q <- dispersion(Q)
 
-# Eigenvalue spectra of ensemble matrices
+# Eigenvalue dispersion of an ensemble
 ensemble <- RME_norm(N = 3, size = 10)
-ensemble_spectrum <- spectrum(ensemble)
+#disp_ensemble <- dispersion(ensemble)
+
+# Alternatively, use the pipe
+#disp_ensemble <- RME_norm(N = 3, size = 10) \%>\% dispersion()
 
 }
