@@ -1,17 +1,18 @@
 Package: RMAT
-Type: Package
-Title: Random Matrices and Ensembles
 Version: 0.1.1
+Title: Random Matrices and Ensembles
 Author: Ali Taqi
 Maintainer: Ali Taqi <alif.taqi00@gmail.com>
-Description: Simulate common classes of random matrices and ensembles and visualize their eigenvalue spectra.
+Description: Simulate common classes of random matrices and ensembles 
+  and visualize their eigenvalue spectra.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Imports:
-  tidyverse,
+  ggplot2,
   purrr,
   stats,
-  ggplot2
+  matrixcalc
 Suggests:
+  viridis

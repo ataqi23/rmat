@@ -1,7 +1,9 @@
+^.*\.DS_Store$
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^RMAT\.Rproj$
+LICENSE.md
+^\.git$
+.gitignore
+documentation/
+demos/
 pull.sh
-documentation
-demos
-^LICENSE\.md$

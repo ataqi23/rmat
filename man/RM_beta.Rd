@@ -4,14 +4,12 @@
 \alias{RM_beta}
 \title{Generate a Gaussian/Hermite \eqn{\beta}-matrix}
 \usage{
-RM_beta(N, beta, cplx = F)
+RM_beta(N, beta)
 }
 \arguments{
 \item{N}{number of dimensions of the square matrix}
 
 \item{beta}{the value of the beta parameter for the beta ensemble}
-
-\item{cplx}{indicates whether the matrix should have complex entries.}
 }
 \value{
 A random Hermite beta matrix with any integer parameter beta

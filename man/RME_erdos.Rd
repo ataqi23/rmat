@@ -4,22 +4,24 @@
 \alias{RME_erdos}
 \title{Generate an ensemble of Erdos-Renyi transition matrices}
 \usage{
-RME_erdos(N, ..., size)
+RME_erdos(N, p, ..., size)
 }
 \arguments{
 \item{N}{number of dimensions of the square matrix}
 
-\item{...}{any default-valued parameters taken as arguments by the RM_ variant of this function}
+\item{p}{the probability two vertices are connected in an Erdos-Renyi graph.}
 
-\item{size}{the number of matrices to be simulated in the ensemble}
+\item{...}{any default-valued parameters taken as arguments by RM_erdos()}
+
+\item{size}{the size of the ensemble (i.e. number of matrices)}
 }
 \value{
 An ensemble (list) of Erdos-Renyi transition matrices as specified by the matrix arguments.
 }
 \description{
-Given the same arguments as RM_norm, this function returns an ensemble of that particular class of matrix.
+Given the same arguments as RM_norm, this function returns an ensemble of random Erdos-Renyi stochastic matrices.
   While random matrices usually do not exude unique properties on their own, they do indeed have
-  deterministic properties (usually in spectral statistics) at the ensemble level.
+  deterministic properties at the ensemble level in terms of their spectral statistics.
 }
 \examples{
 

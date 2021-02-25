@@ -4,14 +4,14 @@
 \alias{RME_beta}
 \title{Generate an ensemble of random beta matrices}
 \usage{
-RME_beta(N, ..., size)
+RME_beta(N, beta, size)
 }
 \arguments{
 \item{N}{number of dimensions of the square matrix}
 
-\item{...}{any default-valued parameters taken as arguments by the RM_ variant of this function}
+\item{beta}{the value of the beta parameter for the beta ensemble}
 
-\item{size}{the number of matrices to be simulated in the ensemble}
+\item{size}{the size of the ensemble (i.e. number of matrices)}
 }
 \value{
 An ensemble (list) of beta matrices as specified by the matrix arguments.
@@ -19,7 +19,7 @@ An ensemble (list) of beta matrices as specified by the matrix arguments.
 \description{
 Given the same arguments as RM_norm, this function returns an ensemble of that particular class of matrix.
   While random matrices usually do not exude unique properties on their own, they do indeed have
-  deterministic properties (usually in spectral statistics) at the ensemble level.
+  deterministic properties at the ensemble level in terms of their spectral statistics.
 }
 \examples{
 
