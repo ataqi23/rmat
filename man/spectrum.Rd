@@ -4,7 +4,7 @@
 \alias{spectrum}
 \title{Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.}
 \usage{
-spectrum(array, components = T, largest = F, smallest = F)
+spectrum(array, components = T, largest = F, smallest = F, digits = 3)
 }
 \arguments{
 \item{array}{a square matrix or matrix ensemble whose eigenvalues are to be returned}
@@ -14,6 +14,8 @@ spectrum(array, components = T, largest = F, smallest = F)
 \item{largest}{returns the largest eigenvalues of the matrix (ensemble)}
 
 \item{smallest}{returns the smallest eigenvalues of the matrix (ensemble)}
+
+\item{digits}{number of digits to round up values to}
 }
 \value{
 A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.

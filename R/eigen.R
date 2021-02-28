@@ -50,7 +50,7 @@ dispersion <- function(array, norm = T, components = T, digits = 3){
   N <- nrow(P) # Get matrix dimension
   # If uninitialized for the ensemble, enumerate unique pairs of N eigenvalues
   if(class(pairs) == "logical"){idx_pairs <- .unique_pairs(N)}
-  else{idx_pairs <- pairs} # Otherwise, read in pre-computed values 
+  else{idx_pairs <- pairs} # Otherwise, read in pre-computed values
   # User is requesting a norm function rather than a setting of Euclidean norm
   if(class(norm) != "logical"){
     norm_fn <- function(x){(abs(x))^norm}
@@ -65,10 +65,10 @@ dispersion <- function(array, norm = T, components = T, digits = 3){
   # Compute the difference
   difference <- eigenvalues[i] - eigenvalues[j]
   # Resolve parameters of desired dispersion metric
-  if(class(norm) == "function"){disp <- data.frame(Dispersion = norm(difference))} 
+  if(class(norm) == "function"){disp <- data.frame(Dispersion = norm(difference))}
   else if(norm){disp <- data.frame(Dispersion = abs(difference))}
   else{
-    if(components){disp <- data.frame(Disp_Re = Re(difference), Disp_Im = Im(difference))} 
+    if(components){disp <- data.frame(Disp_Re = Re(difference), Disp_Im = Im(difference))}
     else{disp <- data.frame(Dispersion = difference)}
   }
   disp <- round(disp, digits) # Round digits
@@ -122,7 +122,7 @@ dispersion.scatterplot <- function(array, ...){
   color0 <- "darkorchid4"
   # Get variances by level
   dispersion(array, ...) %>%
-    ggplot(mapping = aes(x = Dispersion, y = OrderDiff, color = OrderDiff)) + 
+    ggplot(mapping = aes(x = Dispersion, y = OrderDiff, color = OrderDiff)) +
     geom_point() +
     scale_color_continuous(type = "viridis") +
     labs(title = "Distribution of Eigenvalue Spacings by Ranking Difference Class", y = "Ranking Difference")
@@ -135,7 +135,7 @@ dispersion.varplot <- function(array, ...){
   dispersion(array, ...) %>%
     group_by(OrderDiff) %>%
     summarize(Var_Disp = var(Dispersion), size = n()) %>%
-    ggplot(mapping = aes(x = OrderDiff, y = Var_Disp, color = Var_Disp, size = size)) + 
+    ggplot(mapping = aes(x = OrderDiff, y = Var_Disp, color = Var_Disp, size = size)) +
     geom_point() +
     scale_color_continuous(type = "viridis") +
     #scale_size_manual(values = c(1,2)) +
@@ -183,7 +183,7 @@ spectrum <- function(array, components = T, largest = F, smallest = F, digits = 
 .spectrum_matrix <- function(P, components = T, largest = F, smallest = F, digits = 3){
   eigenvalues <- eigen(P)$values # Get eigenvalues of matrix P
   # Get largest eigenvalue
-  if(largest){.resolve_eigenvalue(order = 1, eigenvalues, components)} 
+  if(largest){.resolve_eigenvalue(order = 1, eigenvalues, components)}
   # Get smallest eigenvalue
   else if(smallest){.resolve_eigenvalue(order = nrow(P), eigenvalues, components)}
   # Get all the eigenvalues
@@ -192,14 +192,14 @@ spectrum <- function(array, components = T, largest = F, smallest = F, digits = 
 
 # Read and parse an eigenvalue from an eigen(P)$value array
 .resolve_eigenvalue <- function(order, eigenvalues, components, digits){
-  # Read from eigen(P)$values 
+  # Read from eigen(P)$values
   eigenvalue <- eigenvalues[order]
   # If components are requested, resolve parts into seperate columns
   if(components){
     data.frame(Re = round(Re(eigenvalue),digits), Im = round(Im(eigenvalue),digits),
                Norm = round(abs(eigenvalue), digits), Order = order)
   }
-  else{data.frame(Eigenvalue = round(eigenvalue, digits), 
+  else{data.frame(Eigenvalue = round(eigenvalue, digits),
                   Norm = round(abs(eigenvalue), digits), Order = order)
   }
 }
@@ -219,15 +219,15 @@ spectrum <- function(array, components = T, largest = F, smallest = F, digits = 
 #' @examples
 #' # Eigenvalue spectrum plot of a matrix
 #' P <- RM_norm(N = 5)
-#' spectrum.plot(P)
+#' spectrum.scatterplot(P)
 #'
 #' # Labelled spectrum plot of a beta matrix
 #' Q <- RM_beta(N = 4, beta = 2)
-#' spectrum.plot(Q, mat_str = "Beta")
+#' spectrum.scatterplot(Q, mat_str = "Beta")
 #'
 #' # Eigenvalue spectra plot of an ensemble of normal matrices
 #' ensemble <- RME_norm(N = 3, size = 10)
-#' spectrum.plot(ensemble)
+#' spectrum.scatterplot(ensemble)
 #'
 spectrum.scatterplot <- function(array, mat_str = ""){
   # Process spectrum of the matrix/ensemble
