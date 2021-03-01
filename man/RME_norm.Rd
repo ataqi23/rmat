@@ -4,10 +4,14 @@
 \alias{RME_norm}
 \title{Generate an ensemble of normal random matrices}
 \usage{
-RME_norm(N, ..., size)
+RME_norm(N, mean, sd, ..., size)
 }
 \arguments{
 \item{N}{number of dimensions of the square matrix}
+
+\item{mean}{mean of the normal distribution of entries}
+
+\item{sd}{standard deviation of the normal distribution of entries}
 
 \item{...}{any default-valued parameters taken as arguments by RM_norm()}
 
