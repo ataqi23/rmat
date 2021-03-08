@@ -4,12 +4,14 @@
 \alias{dispersion}
 \title{Obtain the eigenvalue spacings of a matrix or ensemble of matrices.}
 \usage{
-dispersion(array, norm = T, components = T, digits = 3)
+dispersion(array, norm = T, diff_abs = F, components = T, digits = 3)
 }
 \arguments{
 \item{array}{a square matrix or matrix ensemble whose eigenvalue spacings are to be returned}
 
 \item{norm}{use the norm metric for eigenvalue spacing; otherwise returns absolute difference metric}
+
+\item{diff_abs}{return the dispersions by computing the different of absolutes of the eigenvalues}
 
 \item{components}{returns the array with resolved real and imaginary components; otherwise returns complex-valued vectors/distances}
 

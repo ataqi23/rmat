@@ -4,16 +4,15 @@
 \alias{spectrum}
 \title{Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.}
 \usage{
-spectrum(array, components = T, largest = F, smallest = F, digits = 3)
+spectrum(array, order = NA, components = T, digits = 3)
 }
 \arguments{
 \item{array}{a square matrix or matrix ensemble whose eigenvalues are to be returned}
 
-\item{components}{returns the array with resolved real and imaginary components; otherwise returns complex-valued eigenvalues}
+\item{order}{get eigenvalues with that given order (norm ranking); order 1 represents largest, order N represents smallest (where N is the number of eigenvalues).
+If uninitialized, returns the entire spectrum.}
 
-\item{largest}{returns the largest eigenvalues of the matrix (ensemble)}
-
-\item{smallest}{returns the smallest eigenvalues of the matrix (ensemble)}
+\item{components}{returns the array with resolved real and imaginary components if TRUE; otherwise returns complex-valued eigenvalues}
 
 \item{digits}{number of digits to round up values to}
 }

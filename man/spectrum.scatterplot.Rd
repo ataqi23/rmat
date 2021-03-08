@@ -7,7 +7,7 @@
 spectrum.scatterplot(array, ..., mat_str = "")
 }
 \arguments{
-\item{array}{a square matrix or matrix ensemble whose eigenvalues are to be plotted}
+\item{array}{a square matrix or matrix ensemble whose eigenvalues are to be returned}
 
 \item{...}{any default-valued parameters taken as arguments by spectrum(array, ...)}
 

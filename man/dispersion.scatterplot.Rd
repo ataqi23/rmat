@@ -7,7 +7,7 @@
 dispersion.scatterplot(array, ...)
 }
 \arguments{
-\item{array}{a square matrix or matrix ensemble whose eigenvalues spacings are to be plotted}
+\item{array}{a square matrix or matrix ensemble whose eigenvalue spacings are to be returned}
 
 \item{...}{any default-valued parameters taken as arguments by spectrum(array, ...)}
 }
