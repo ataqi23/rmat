@@ -4,12 +4,14 @@
 \alias{dispersion.scatterplot}
 \title{Visualize a plot of the eigenvalue difference spectrum of a matrix or ensemble of matrices.}
 \usage{
-dispersion.scatterplot(array, metric = "id_diff_norm", ...)
+dispersion.scatterplot(array, metric = "id_diff_norm", pairs = NA, ...)
 }
 \arguments{
 \item{array}{a square matrix or matrix ensemble whose eigenvalue spacings are to be returned}
 
 \item{metric}{a string denoting the eigenvalue dispersion metric (column of a dispersion object) to use}
+
+\item{pairs}{a string argument representing the pairing scheme to use}
 
 \item{...}{any default-valued parameters taken as arguments by spectrum(array, ...)
 
