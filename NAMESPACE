@@ -1,4 +1,7 @@
 exportPattern("^[[:alpha:]]+")
 import("ggplot2")
+import("dplyr")
+import("patchwork")
 importFrom("stats", "density", "dnorm", "rbinom", "rchisq", "rnorm","runif", "var")
+#importFrom("viridis","scale_color_viridic_c")
 

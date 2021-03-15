@@ -2,7 +2,7 @@
 % Please edit documentation in R/matrices.R
 \name{RM_beta}
 \alias{RM_beta}
-\title{Generate a Gaussian/Hermite \eqn{\beta}-matrix}
+\title{Generate a Hermite \eqn{\beta}-matrix}
 \usage{
 RM_beta(N, beta)
 }
@@ -15,7 +15,7 @@ RM_beta(N, beta)
 A random Hermite beta matrix with any integer parameter beta
 }
 \description{
-Gaussian-\eqn{\beta} ensemble matrices are matrices with normal entries and beta real number components.
+Hermite-\eqn{\beta} ensemble matrices are matrices with normal entries and beta real number components.
   Using Dumitriu's tridiagonal model, this function is an implementation of the generalized, but not necessarily invariant,
   beta ensembles for \eqn{\beta} > 0.
 }

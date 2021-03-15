@@ -12,7 +12,9 @@ RoxygenNote: 7.1.1
 Imports:
   ggplot2,
   purrr,
+  dplyr,
   stats,
-  matrixcalc
+  viridis,
+  patchwork
 Suggests:
-  viridis
+  tidyverse
