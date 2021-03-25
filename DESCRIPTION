@@ -15,6 +15,10 @@ Imports:
   dplyr,
   stats,
   viridis,
-  patchwork
+  patchwork,
+  magrittr,
+  matrixcalc,
+  future,
+  furrr
 Suggests:
   tidyverse

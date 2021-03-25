@@ -2,7 +2,40 @@
 # This script includes functions that help extract and plot eigenvalues of matrices.
 
 #=================================================================================#
-#                              SPECTRUM FUNCTIONS
+#                           EIGENVALUE DISPERSION (PARALLEL)
+#=================================================================================#
+
+# Setup parallel compuations 
+future::plan(multisession)
+print("Future plan has been set to multisession by default.")
+
+#' @title Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.
+#'
+#' @description Returns a tidied dataframe of the eigenvalues of a random matrix or ensemble.
+#'
+#' @inheritParams spectrum
+#'
+#' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
+#' @examples
+#' 
+#' # Eigenvalue spectrum computed in parallel
+#' P <- RM_norm(N = 10000)
+#' #spectrum_P <- spectrum_parallel(P)
+#' 
+spectrum_parallel <- function(array, components = TRUE, sort_norms = TRUE, singular = FALSE, order = NA){
+  digits <- 4 # Digits to round values to
+  # Array is a matrix; call function returning eigenvalues for singleton matrix
+  if(class(array) == "matrix"){
+    .spectrum_matrix(array, components, sort_norms, singular, order, digits)
+  }
+  # Array is an ensemble; recursively row binding each matrix's eigenvalues
+  else if(class(array) == "list"){
+    furrr::future_map_dfr(array, .spectrum_matrix, components, sort_norms, singular, order, digits)
+  }
+}
+
+#=================================================================================#
+#                              EIGENVALUE SPECTRUM 
 #=================================================================================#
 
 #' @title Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.
@@ -12,6 +45,7 @@
 #' @param array a square matrix or matrix ensemble whose eigenvalues are to be returned
 #' @param components returns the array with resolved real and imaginary components if TRUE; otherwise returns complex-valued eigenvalues
 #' @param sort_norms sorts the eigenvalue spectrum by its norms, otherwise sorts by sign
+#' @param singular get the singular values of the matrix (i.e. square root of the eigenvalues of the matrix times its transpose)
 #' @param order get eigenvalues with that given order (norm ranking); order 1 represents largest, order N represents smallest (where N is the number of eigenvalues).
 #'   If uninitialized, returns the entire spectrum.
 #'
@@ -48,8 +82,8 @@ spectrum <- function(array, components = TRUE, sort_norms = TRUE, singular = FAL
   # Get the sorted eigenvalue spectrum of the matrix
   eigenvalues <- eigen(P)$values # Compute the eigenvalues of P
   if(singular){eigenvalues <- sqrt(eigenvalues)} # Take the square root of the eigenvalues
-  if(sort_norms){eigenvalues <- .sortByNorm(eigenvalues)} # Order the eigenvalue spectrum by norm rather than sign
-  else{eigenvalues <- sort(eigenvalues)} # Else, sort by sign.
+  if(sort_norms){eigenvalues <- .sort_by_norm(eigenvalues)} # Order the eigenvalue spectrum by norm rather than sign
+  else{eigenvalues <- sort(eigenvalues, decreasing = TRUE)} # Else, sort by sign.
   # If uninitialized, get eigenvalues of all orders; Otherwise, concatenate so single inputs become vectors
   if(class(order) == "logical"){order <- 1:nrow(P)} else{order <- c(order)}
   purrr::map_dfr(order, .resolve_eigenvalue, eigenvalues, components, digits) # Get the eigenvalues
@@ -80,7 +114,7 @@ spectrum <- function(array, components = TRUE, sort_norms = TRUE, singular = FAL
 #=================================================================================#
 
 # Sort an array of numbers by their norm (written for eigenvalue sorting)
-.sortByNorm <- function(eigenvalues){
+.sort_by_norm <- function(eigenvalues){
   (data.frame(eigenvalue = eigenvalues, norm = abs(eigenvalues)) %>% arrange(desc(norm)))$eigenvalue
   }
 
