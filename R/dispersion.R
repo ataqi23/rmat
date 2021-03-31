@@ -5,6 +5,18 @@
 #                           EIGENVALUE DISPERSION (PARALLEL)
 #=================================================================================#
 
+#' @title Obtain the eigenvalue spacings of a matrix or ensemble of matrices.
+#'
+#' @description Returns a vector of the eigenvalue spacings of a random matrix or ensemble.
+#'
+#' @inheritParams dispersion
+#'
+#' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
+#' @examples
+#' 
+#' # Eigenvalue dispersion in parallel
+#' P <- RM_norm(N = 100, size = 500)
+#' #disp_P <- dispersion_parallel(P)
 dispersion_parallel <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, norm_pow = 1){ #sortNorms? orderByNorms? pair_scheme?
   digits <- 4 # Digits to round values to
   pairs <- .parsePairs(pairs, array) # Parse input and generate pair scheme (default NA), passing on array for dimension and array type inference
