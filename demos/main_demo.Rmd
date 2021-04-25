@@ -12,11 +12,11 @@ library(tidyverse)
 ```
 
 ```{r}
-# ?RM_norm
-# ?RM_erdos
-# ?RM_stoch
-# ?RM_beta
-# ?RM_trid
+?RM_norm
+?RM_erdos
+?RM_stoch
+?RM_beta
+?RM_trid
 ```
 
 ```{r}
@@ -28,8 +28,8 @@ P %>% dispersion(pairs = "consecutive") %>% dispersion.histogram(metric = "abs_d
 
 ```{r}
 P <- RME_norm(N = 10, cplx = T, herm = T, size = 100)
-P %>% spectrum(components = T, sortByNorm = F) %>% spectrum.scatterplot()
-P %>% spectrum(components = T, sortByNorm = T) %>% spectrum.scatterplot()
+P %>% spectrum(components = T, sort_norms = F) %>% spectrum.scatterplot()
+P %>% spectrum(components = T, sort_norms = T) %>% spectrum.scatterplot()
 P %>% dispersion(pairs = "lower") %>% dispersion.scatterplot(metric = "abs_diff")
 P %>% dispersion(pairs = "consecutive") %>% dispersion.scatterplot(pairs = "consecutive", metric = "id_diff_norm")
 P %>% dispersion(pairs = "consecutive") %>% dispersion.scatterplot(pairs = "consecutive", metric = "abs_diff")

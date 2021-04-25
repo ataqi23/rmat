@@ -1,36 +1,32 @@
 
 # This script includes functions that help extract and plot eigenvalues of matrices.
 
-# Setup parallel compuations 
-future::plan(multisession)
-print("Future plan has been set to multisession by default.")
-
 #=================================================================================#
 #                           EIGENVALUE SPECTRUM (PARALLEL)
 #=================================================================================#
 #' 
 #' @title Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.
-#'
 #' @description Returns a tidied dataframe of the eigenvalues of a random matrix or ensemble.
-#'
 #' @inheritParams spectrum
-#'
 #' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
-#' @examples
 #' 
+#' @examples
 #' # Eigenvalue spectrum computed in parallel
 #' P <- RME_norm(N = 100, size = 500)
 #' #spectrum_P <- spectrum_parallel(P)
 #' 
 spectrum_parallel <- function(array, components = TRUE, sort_norms = TRUE, singular = FALSE, order = NA){
-  digits <- 4 # Digits to round values to
-  # Array is a matrix; call function returning eigenvalues for singleton matrix
-  if(class(array) == "matrix"){
-    .spectrum_matrix(array, components, sort_norms, singular, order, digits)
-  }
-  # Array is an ensemble; recursively row binding each matrix's eigenvalues
-  else if(class(array) == "list"){
+  # Digits to round values to
+  digits <- 4
+  # Set up futures
+  future::plan(multisession)
+  # Compute the spectrum
+  if(class(array) == "list") {
+    # Array is an ensemble; recursively row bind each matrix's eigenvalues  
     furrr::future_map_dfr(array, .spectrum_matrix, components, sort_norms, singular, order, digits)
+  } else {
+    # Array is a matrix; call function returning eigenvalues for a singleton matrix
+    .spectrum_matrix(array, components, sort_norms, singular, order, digits)
   }
 }
 
@@ -39,7 +35,6 @@ spectrum_parallel <- function(array, components = TRUE, sort_norms = TRUE, singu
 #=================================================================================#
 
 #' @title Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.
-#'
 #' @description Returns a tidied dataframe of the eigenvalues of a random matrix or ensemble.
 #'
 #' @param array a square matrix or matrix ensemble whose eigenvalues are to be returned
@@ -50,8 +45,8 @@ spectrum_parallel <- function(array, components = TRUE, sort_norms = TRUE, singu
 #'   If uninitialized, returns the entire spectrum.
 #'
 #' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
+#' 
 #' @examples
-#'
 #' # Eigenvalue spectrum of a random normal matrix
 #' P <- RM_norm(N = 5)
 #' spectrum_P <- spectrum(P)
@@ -64,14 +59,15 @@ spectrum_parallel <- function(array, components = TRUE, sort_norms = TRUE, singu
 #' ensemble_spectrum <- spectrum(ensemble)
 #'
 spectrum <- function(array, components = TRUE, sort_norms = TRUE, singular = FALSE, order = NA){
-  digits <- 4 # Digits to round values to
-  # Array is a matrix; call function returning eigenvalues for singleton matrix
-  if(class(array) == "matrix"){
-    .spectrum_matrix(array, components, sort_norms, singular, order, digits)
-  }
+  # Digits to round values to
+  digits <- 4
   # Array is an ensemble; recursively row binding each matrix's eigenvalues
-  else if(class(array) == "list"){
+  if(class(array) == "list"){
     purrr::map_dfr(array, .spectrum_matrix, components, sort_norms, singular, order, digits)
+  }
+  # Array is a matrix; call function returning eigenvalues for singleton matrix
+  else{
+    .spectrum_matrix(array, components, sort_norms, singular, order, digits)
   }
 }
 
@@ -79,190 +75,51 @@ spectrum <- function(array, components = TRUE, sort_norms = TRUE, singular = FAL
 .spectrum_matrix <- function(P, components, sort_norms, singular, order, digits = 4){
   # If prompted for singular values, then take the product of the matrix and its tranpose instead
   if(singular){P <- P %*% t(P)}
-  # Get the sorted eigenvalue spectrum of the matrix
-  eigenvalues <- eigen(P)$values # Compute the eigenvalues of P
-  if(singular){eigenvalues <- sqrt(eigenvalues)} # Take the square root of the eigenvalues
-  if(sort_norms){eigenvalues <- .sort_by_norm(eigenvalues)} # Order the eigenvalue spectrum by norm rather than sign
-  else{eigenvalues <- sort(eigenvalues, decreasing = TRUE)} # Else, sort by sign.
-  # If uninitialized, get eigenvalues of all orders; Otherwise, concatenate so single inputs become vectors
+  # Get the eigenvalues of P
+  eigenvalues <- eigen(P)$values
+  # Take the square root of the eigenvalues to obtain singular values
+  if(singular){eigenvalues <- sqrt(eigenvalues)}
+  # Sort the eigenvalues to make it an ordered spectrum
+  eigenvalues <- .sort_values(eigenvalues, sort_norms)
+  # If uninitialized, get eigenvalues of all orders; otherwise, use c() so singletons => vectors
   if(class(order) == "logical"){order <- 1:nrow(P)} else{order <- c(order)}
-  purrr::map_dfr(order, .resolve_eigenvalue, eigenvalues, components, digits) # Get the eigenvalues
+  # Return the spectrum of the matrix
+  return(purrr::map_dfr(order, .resolve_eigenvalue, eigenvalues, components, digits))
 }
 
-# Read and parse an eigenvalue from an eigen(P)$value array
+# Read and parse an eigenvalue from a sorted eigenvalue array
 .resolve_eigenvalue <- function(order, eigenvalues, components, digits){
-  eigenvalue <- eigenvalues[order] # Read from eigen(P)$values
-  # Get norm and order columns (will unconditionally be returned)
-  norm_and_order <- data.frame(Norm = abs(eigenvalue), Order = order)
-  # If components are requested, resolve parts into seperate columns and cbind to norm and order
-  if(components){evalue <- cbind(data.frame(Re = Re(eigenvalue), Im = Im(eigenvalue)), norm_and_order)}
-  else{evalue <- cbind(data.frame(Eigenvalue = eigenvalue), norm_and_order)}
-  evalue <- round(evalue, digits) # Round entries
-  evalue # Return resolved eigenvalue
+  # Read from a sorted eigenvalue array at that order
+  eigenvalue <- eigenvalues[order]
+  # Get norm and order columns
+  features <- data.frame(Norm = abs(eigenvalue), Order = order)
+  if(components){
+    # If components are requested, resolve parts into seperate columns and cbind to norm and order
+    res <- cbind(data.frame(Re = Re(eigenvalue), Im = Im(eigenvalue)), features)
+  } else{ 
+    # Otherwise, don't resolve the eigenvalue components
+    res <- cbind(data.frame(Eigenvalue = eigenvalue), features)
+  }
+  # Round entries and return the resolved eigenvalue
+  res <- round(res, digits) 
+  return(res) 
 }
-
-# .parse_sortByNorm <- function(sort_norms, array){
-#   if(class(array) == "list"){P <- array[[1]]} else{P <- array} # Parse array type to sample a matrix if ensemble
-#   # If the sort_norms argument is uninitialized, infer optimal case. Optimally TRUE when eigenvalues are complex.
-#   if(is.na(sort_norms)){sort_norms <- ifelse(.isHermitian(P), F, T)} # Eigenvalues are real when the matrix is symmetric
-#   else{sort_norms <- sort_norms}
-#   sort_norms # Return parsed value
-# }
 
 #=================================================================================#
 #                              ORDER SORTING SCHEMES
 #=================================================================================#
 
 # Sort an array of numbers by their norm (written for eigenvalue sorting)
-.sort_by_norm <- function(eigenvalues){
-  (data.frame(eigenvalue = eigenvalues, norm = abs(eigenvalues)) %>% arrange(desc(norm)))$eigenvalue
-  }
-
-# Resorts the norm of an eigenvalue based on a particular metric of order; default is regular norm.
-# .resort_spectrum <- function(array_spectrum, scheme = "norm"){
-#   NA
-  # Other schemes could be by sign; as in original "bug", we could always prioritize eigenvalues with positive sign
-  # Could be called scheme = "sign"
-  # array_spectrum
-# }
-
-#=================================================================================#
-#                         SPECTRUM VISUALIZATION FUNCTIONS
-#=================================================================================#
-
-#' @title Visualize a plot of the eigenvalue spectrum of a matrix or ensemble of matrices.
-#'
-#' @description Returns a scatterplot of the eigenvalues of a random matrix or ensemble.
-#'
-#' @inheritParams spectrum
-#' @param ... any default-valued parameters taken as arguments by spectrum(array, ...)
-#' @param mat_str (optional) a string argument of the class of the matrix to label the plot title.
-#'
-#' @return A ggplot object containing a scatterplot of the matrix/matrix ensemble's spectrum.
-#' @examples
-#' # Eigenvalue spectrum plot of a matrix
-#' P <- RM_norm(N = 5)
-#' #spectrum.scatterplot(P)
-#'
-#' # Labelled spectrum plot of a beta matrix
-#' Q <- RM_beta(N = 4, beta = 2)
-#' #spectrum.scatterplot(Q, mat_str = "Beta")
-#'
-#' # Eigenvalue spectra plot of an ensemble of normal matrices
-#' ensemble <- RME_norm(N = 3, size = 10)
-#' #spectrum.scatterplot(ensemble)
-#'
-spectrum.scatterplot <- function(array, ..., mat_str = ""){
-  # Process spectrum of the matrix/ensemble
-  if(class(array) == "list" || class(array) == "matrix"){
-    array_spectrum <- spectrum(array, ...)
-  }
-  # Else, the array is a precomputed spectrum (avoid computational waste for multiple visualizations)
-  else{
-    array_spectrum <- array
-  }
-  # Infer plot title string from which type of array (matrix/ensemble)
-  title_str <- .plot_title(class(array), prefix = "Spectrum", mat_str)
-  # Plot parameters
-  order <- array_spectrum[["Order"]]
-  # Plot
-  array_spectrum %>%
-    ggplot() +
-    geom_point(mapping = aes(x = Re, y = Im, color = order), alpha = 0.75) +
-    scale_color_continuous(type = "viridis") +
-    labs(x = "Re", y = "Im", title = paste(title_str,sep = "")) +
-    coord_fixed()
+.sort_values <- function(vals, sort_norms){
+  values <- data.frame(value = vals)
+  # If asked to sort by norms, arrange by norm and return
+  if(sort_norms){
+    values$norm <- abs(values$value)
+    values <- values %>% arrange(desc(norm))
+    return(values$value)
+  } 
+  # Otherwise, sort by sign and return
+  else{ return(sort(vals, decreasing = TRUE)) }
 }
 
-#' @title Visualize a plot of the eigenvalue distribution of a matrix or ensemble of matrices.
-#'
-#' @description Returns a histogram of the eigenvalues of a random matrix or ensemble.
-#'
-#' @inheritParams spectrum
-#' @param ... any default-valued parameters taken as arguments by spectrum(array, ...)
-#' @param component a string specifying a specific component of the spectrum to display; either "Re" or "Im". Defaults to both
-#' @param bins number of bins of the histogram
-#' @param mat_str (optional) a string argument of the class of the matrix to label the plot title.
-#'
-#' @return A ggplot object containing a histogram of the matrix/matrix ensemble's spectrum.
-#' @examples
-#' # Eigenvalue spectrum plot of a matrix
-#' P <- RM_norm(N = 5)
-#' #spectrum.histogram(P)
-#'
-#' # Labelled spectrum plot of a beta matrix
-#' Q <- RM_beta(N = 4, beta = 2)
-#' #spectrum.histogram(Q, mat_str = "Beta")
-#'
-#' # Eigenvalue spectra plot of an ensemble of normal matrices
-#' ensemble <- RME_norm(N = 3, size = 10)
-#' #spectrum.histogram(ensemble)
-#'
-spectrum.histogram <- function(array, ..., component = NA, bins = 100, mat_str = ""){
-  # Process spectrum of the matrix/ensemble
-  if(class(array) == "list" || class(array) == "matrix"){array_spectrum <- spectrum(array, ...)}
-  else{array_spectrum <- array} # Else, the array is a precomputed spectrum (avoid computational waste for multiple visualizations)
-  # Infer plot title string from which type of array (matrix/ensemble)
-  title_str <- .plot_title(class(array), prefix = "Spectrum", mat_str)
-  # Plot parameters
-  color0 <- "mediumpurple3"
-  num_entries <- nrow(array) # Get number of entries to normalize
-  if(class(component) == "logical"){component <- c("Re", "Im")} # Set default to both components
-  # Plot lambda function
-  component_plot <- function(component){
-    # Plot parameters
-    component_str <- paste(" (",component,")",collapse = "")
-    # Plot
-    array_spectrum %>%
-      ggplot() +
-      geom_histogram(mapping = aes_string(x = component), fill = color0) +
-      labs(x = component, y = "Frequency", title = paste(title_str, component_str, sep = ""))
-  }
-  # Get list of plots
-  plots <- purrr::map(component, component_plot)
-  # If we have both components and patchwork is loaded, attach plots to each other
-  if(length(plots) == 2){plots[[1]] / plots[[2]]} else if(length(plots) == 1){plots[[1]]}
-  # Return the list of plots
-  else{plots}
-}
 
-# Helper function returning appoporiate string for matrix/ensemble given a matrix type string and class of input array
-.plot_title <- function(array_class, prefix, mat_str){
-  if(mat_str != ""){pre_space <- " "} else{pre_space <- ""} # Format without given name
-  # Infer plot title string from which type of array (matrix/ensemble)
-  if(array_class == "matrix"){plot_str <- paste(pre_space, mat_str," Matrix", sep = "", collapse = "")}
-  else if(array_class == "list"){plot_str <- paste(pre_space, mat_str," Matrix Ensemble", sep = "", collapse = "")}
-  else{plot_str <- paste(pre_space, mat_str," Matrix Ensemble", sep = "", collapse = "")}
-  paste(prefix," of a",plot_str, sep = "")
-}
-
-#=================================================================================#
-#                             SPECTRUM ORDER PLOTS
-#=================================================================================#
-
-order.scatterplot <- function(spectrum, component){
-  spectrum %>%
-    ggplot(aes(x = Order, y = {{ component }}, color = Order)) +
-    geom_point() +
-    scale_color_viridis_c() +
-    theme(legend.position = "bottom")
-}
-order.density <- function(spectrum, component){
-  spectrum %>%
-    ggplot(mapping = aes(group = Order, x = {{ component }}, color = Order)) + 
-    geom_density() +
-    scale_color_viridis_c() +
-    theme(legend.position = "bottom")
-}
-order.summary <- function(spectrum, component){
-  spectrum %>%
-    group_by(Order) %>%
-    summarize(
-      Mean_Re = mean(Re), Mean_Im = mean(Im), Mean_Norm = mean(Norm),
-      Variance_Re = var(Re), Variance_Im = var(Im), Variance_Norm = var(Norm)) %>%
-    ggplot(mapping = aes(y = {{ component }}, x = Order, color = Order)) + 
-    geom_point() +
-    geom_line() +
-    scale_color_viridis_c() +
-    theme(legend.position = "bottom")
-}
