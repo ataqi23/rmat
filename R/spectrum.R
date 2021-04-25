@@ -4,10 +4,12 @@
 #=================================================================================#
 #                           EIGENVALUE SPECTRUM (PARALLEL)
 #=================================================================================#
-#' 
+
 #' @title Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.
 #' @description Returns a tidied dataframe of the eigenvalues of a random matrix or ensemble.
+#' 
 #' @inheritParams spectrum
+#' 
 #' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
 #' 
 #' @examples
@@ -106,7 +108,7 @@ spectrum <- function(array, components = TRUE, sort_norms = TRUE, singular = FAL
 }
 
 #=================================================================================#
-#                              ORDER SORTING SCHEMES
+#                           SPECTRUM: HELPER FUNCTIONS
 #=================================================================================#
 
 # Sort an array of numbers by their norm (written for eigenvalue sorting)

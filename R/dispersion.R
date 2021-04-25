@@ -6,27 +6,30 @@
 #=================================================================================#
 
 #' @title Obtain the eigenvalue spacings of a matrix or ensemble of matrices.
-#'
 #' @description Returns a vector of the eigenvalue spacings of a random matrix or ensemble.
 #'
 #' @inheritParams dispersion
 #'
 #' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
-#' @examples
 #' 
+#' @examples
 #' # Eigenvalue dispersion in parallel
 #' P <- RM_norm(N = 100, size = 500)
 #' #disp_P <- dispersion_parallel(P)
+#' 
 dispersion_parallel <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, norm_pow = 1){ #sortNorms? orderByNorms? pair_scheme?
-  digits <- 4 # Digits to round values to
-  pairs <- .parsePairs(pairs, array) # Parse input and generate pair scheme (default NA), passing on array for dimension and array type inference
-  # Array is a matrix; call function returning dispersion for singleton matrix
-  if(class(array) == "matrix"){
-    .dispersion_matrix(array, pairs, sort_norms, singular, norm_pow, digits)
-  }
-  # Array is an ensemble; recursively row binding each matrix's dispersions
-  else if(class(array) == "list"){
+  # Digits to round values to
+  digits <- 4
+  # Parse input and generate pair scheme (default NA), passing on array for dimension and array type inference
+  pairs <- .parsePairs(pairs, array) 
+  # Compute the dispersion
+  if(class(array) == "list"){
+    # Array is an ensemble; recursively row binding each matrix's dispersions
     furrr::future_map_dfr(array, .dispersion_matrix, pairs, sort_norms, singular, norm_pow, digits)
+  }
+  else{
+    # Array is a matrix; call function returning dispersion for singleton matrix
+    .dispersion_matrix(array, pairs, sort_norms, singular, norm_pow, digits)
   }
 }
 
@@ -35,7 +38,6 @@ dispersion_parallel <- function(array, pairs = NA, sort_norms = TRUE, singular =
 #=================================================================================#
 
 #' @title Obtain the eigenvalue spacings of a matrix or ensemble of matrices.
-#'
 #' @description Returns a vector of the eigenvalue spacings of a random matrix or ensemble.
 #'
 #' @param array a square matrix or matrix ensemble whose eigenvalue spacings are to be returned
@@ -44,8 +46,8 @@ dispersion_parallel <- function(array, pairs = NA, sort_norms = TRUE, singular =
 #' @param norm_pow power to raise norm to - defaults to 1 (the standard absolute value); otherwise raises norm to the power of argument (beta norm)
 #'
 #' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
+#' 
 #' @examples
-#'
 #' # Eigenvalue dispersion of a normal matrix
 #' P <- RM_norm(N = 5)
 #' #disp_P <- dispersion(P)
@@ -108,6 +110,10 @@ dispersion <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, n
   }
 }
 
+#=================================================================================#
+#                           DISPERSION: HELPER FUNCTIONS
+#=================================================================================#
+
 # Parse a string argument for which pairing scheme to utilize
 .parsePairs <- function(pairs, array){
   valid_schemes <- c("largest", "lower", "upper", "consecutive", "all") # Valid schemes for printing if user is unaware of options
@@ -156,5 +162,4 @@ dispersion <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, n
   js <- rep(1:N, N)
   do.call("rbind",purrr::map2(is, js, .f = function(i, j){if(i < j){c(i = i, j = j)}}))
 }
-
 
