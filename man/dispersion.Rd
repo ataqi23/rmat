@@ -38,12 +38,8 @@ disp_P <- dispersion(P, pairs = "lower")
 Q <- RM_stoch(N = 5)
 disp_Q <- dispersion(Q)
 
-# Eigenvalue dispersion of an normal matrix ensemble (using the consecutive pair scheme)
+# Eigenvalue dispersion of an normal matrix ensemble, ordering by sign instead of norm.
 ens <- RME_beta(N = 10, beta = 2, size = 10)
 disp_ens <- dispersion(ens, norm_order = FALSE)
-
-# Alternatively, use the pipe
-library(tidyverse)
-disp_ens <- RME_norm(N = 3, size = 10) \%>\% dispersion(pairs = "consecutive", pow_norm = 2)
 
 }

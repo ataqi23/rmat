@@ -30,10 +30,6 @@
 #' ens <- RME_beta(N = 10, beta = 2, size = 10)
 #' disp_ens <- dispersion(ens, norm_order = FALSE)
 #'
-#' # Alternatively, use the pipe
-#' library(tidyverse)
-#' disp_ens <- RME_norm(N = 3, size = 10) %>% dispersion(pairs = "consecutive", pow_norm = 2)
-#'
 dispersion <- function(array, pairs = NA, norm_order = TRUE, singular = FALSE, pow_norm = 1){
   # Digits to round values to
   digits <- 4
