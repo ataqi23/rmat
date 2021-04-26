@@ -28,6 +28,6 @@ ens %>% spectrum()
 ## Dispersion
 
 ```{r}
-disp_ens <- dispersion(ens, pairs = "nuggets")
+disp_ens <- dispersion(ens, pairs = "lower")
 disp_ens
 ```
