@@ -1,6 +1,6 @@
 # RMAT: Random Matrix Analysis Toolkit
 
-RMAT is an R package for simulating random matrices and ensembles as well as analyzing their eigenvalue spectra and dispersions. 
+RMAT is an R package for simulating random matrices and ensembles as well as computing and analyzing their eigenvalue spectra and dispersions. 
 
 ## Installation
 
