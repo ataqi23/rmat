@@ -7,9 +7,9 @@
 dispersion(
   array,
   pairs = NA,
-  sort_norms = TRUE,
+  norm_order = TRUE,
   singular = FALSE,
-  norm_pow = 1
+  pow_norm = 1
 )
 }
 \arguments{
@@ -17,11 +17,11 @@ dispersion(
 
 \item{pairs}{a string argument representing the pairing scheme to use}
 
-\item{sort_norms}{sorts the eigenvalue spectrum by its norms when TRUE; otherwise, sorts eigenvalue by sign}
+\item{norm_order}{sorts the eigenvalue spectrum by its norms when TRUE; otherwise, sorts eigenvalue by sign}
 
 \item{singular}{get the singular values of the matrix (i.e. square root of the eigenvalues of the matrix times its transpose)}
 
-\item{norm_pow}{power to raise norm to - defaults to 1 (the standard absolute value); otherwise raises norm to the power of argument (beta norm)}
+\item{pow_norm}{power to raise norm to - defaults to 1 (the standard absolute value); otherwise raises norm to the power of argument (beta norm)}
 }
 \value{
 A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
@@ -39,11 +39,11 @@ Q <- RM_stoch(N = 5)
 disp_Q <- dispersion(Q)
 
 # Eigenvalue dispersion of an normal matrix ensemble (using the consecutive pair scheme)
-ens <- RME_norm(N = 3, size = 10)
-disp_ens <- dispersion(ens)
+ens <- RME_beta(N = 10, beta = 2, size = 10)
+disp_ens <- dispersion(ens, norm_order = FALSE)
 
 # Alternatively, use the pipe
 library(tidyverse)
-disp_ens <- RME_norm(N = 3, size = 10) \%>\% dispersion(pairs = "consecutive", norm_pow = 2)
+disp_ens <- RME_norm(N = 3, size = 10) \%>\% dispersion(pairs = "consecutive", pow_norm = 2)
 
 }

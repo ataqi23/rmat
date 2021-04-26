@@ -7,9 +7,9 @@
 dispersion_par(
   array,
   pairs = NA,
-  sort_norms = TRUE,
+  norm_order = TRUE,
   singular = FALSE,
-  norm_pow = 1
+  pow_norm = 1
 )
 }
 \arguments{
@@ -17,11 +17,11 @@ dispersion_par(
 
 \item{pairs}{a string argument representing the pairing scheme to use}
 
-\item{sort_norms}{sorts the eigenvalue spectrum by its norms when TRUE; otherwise, sorts eigenvalue by sign}
+\item{norm_order}{sorts the eigenvalue spectrum by its norms when TRUE; otherwise, sorts eigenvalue by sign}
 
 \item{singular}{get the singular values of the matrix (i.e. square root of the eigenvalues of the matrix times its transpose)}
 
-\item{norm_pow}{power to raise norm to - defaults to 1 (the standard absolute value); otherwise raises norm to the power of argument (beta norm)}
+\item{pow_norm}{power to raise norm to - defaults to 1 (the standard absolute value); otherwise raises norm to the power of argument (beta norm)}
 }
 \value{
 A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.

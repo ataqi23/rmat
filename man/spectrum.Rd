@@ -7,7 +7,7 @@
 spectrum(
   array,
   components = TRUE,
-  sort_norms = TRUE,
+  norm_order = TRUE,
   singular = FALSE,
   order = NA
 )
@@ -17,7 +17,7 @@ spectrum(
 
 \item{components}{returns the array with resolved real and imaginary components if TRUE; otherwise returns complex-valued eigenvalues}
 
-\item{sort_norms}{sorts the eigenvalue spectrum by its norms, otherwise sorts by sign}
+\item{norm_order}{sorts the eigenvalue spectrum by its norms, otherwise sorts by sign}
 
 \item{singular}{get the singular values of the matrix (i.e. square root of the eigenvalues of the matrix times its transpose)}
 
