@@ -33,13 +33,13 @@ Returns a tidied dataframe of the eigenvalues of a random matrix or ensemble.
 \examples{
 # Eigenvalue spectrum of a random normal matrix
 P <- RM_norm(N = 5)
-spectrum_P <- spectrum(P)
+spec_P <- spectrum(P)
 
 Q <- matrix(runif(2^2), ncol = 2)
-spectrum_Q <- spectrum(Q)
+spec_Q <- spectrum(Q)
 
 # Eigenvalue spectra of ensemble matrices
-ensemble <- RME_norm(N = 3, size = 10)
-ensemble_spectrum <- spectrum(ensemble)
+ens <- RME_norm(N = 3, size = 10)
+spec_ens <- spectrum(ens)
 
 }

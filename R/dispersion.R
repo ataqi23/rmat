@@ -18,38 +18,41 @@
 #' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
 #'
 #' @examples
-#' # Eigenvalue dispersion of a normal matrix
+#' # Eigenvalue dispersion of a normal matrix using the lower pair scheme
 #' P <- RM_norm(N = 5)
-#' #disp_P <- dispersion(P)
+#' disp_P <- dispersion(P, pairs = "lower")
 #'
-#' # Eigenvalue dispersion of a stochastic matrix
+#' # Eigenvalue dispersion of a stochastic matrix (using the consecutive pair scheme)
 #' Q <- RM_stoch(N = 5)
-#' #disp_Q <- dispersion(Q)
+#' disp_Q <- dispersion(Q)
 #'
-#' # Eigenvalue dispersion of an ensemble
+#' # Eigenvalue dispersion of an normal matrix ensemble (using the consecutive pair scheme)
 #' ens <- RME_norm(N = 3, size = 10)
-#' #disp_ens <- dispersion(ens)
+#' disp_ens <- dispersion(ens)
 #'
 #' # Alternatively, use the pipe
-#' #disp_ens <- RME_norm(N = 3, size = 10) %>% dispersion()
+#' library(tidyverse)
+#' disp_ens <- RME_norm(N = 3, size = 10) %>% dispersion(pairs = "consecutive", norm_pow = 2)
 #'
 dispersion <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, norm_pow = 1){
   # Digits to round values to
   digits <- 4
   # Get the type of array
   array_class <- .arrayClass(array)
+  # Parse input and generate pair scheme (default NA), passing on array for dimension
+  pairs <- .parsePairs(pairs, array, array_class)
   # Array is an ensemble; recursively row binding each matrix's dispersions
   if(array_class == "ensemble"){
-    # Parse input and generate pair scheme (default NA), passing on array for dimension
-    pairs <- .parsePairs(pairs, array = array[[1]])
-    purrr::map_dfr(array, .dispersion_matrix, pairs, sort_norms, singular, norm_pow, digits)
+    disp <- purrr::map_dfr(array, .dispersion_matrix, pairs, sort_norms, singular, norm_pow, digits)
   }
   # Array is a matrix; call function returning dispersion for singleton matrix
   else if(array_class == "matrix"){
-    # Parse input and generate pair scheme (default NA), passing on array for dimension
-    pairs <- .parsePairs(pairs, array)
-    .dispersion_matrix(array, pairs, sort_norms, singular, norm_pow, digits)
+    disp <- .dispersion_matrix(array, pairs, sort_norms, singular, norm_pow, digits)
   }
+  # Resolve column types; i.e. coerce real-valued eigenvalues to a numeric type if possible
+  disp <- .resolveNumType(disp)
+  # Return the dispersion
+  disp
 }
 
 #=================================================================================#
@@ -60,7 +63,9 @@ dispersion <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, n
   # Generate norm function to pass along as argument (Euclidean or Beta norm)
   norm_fn <- function(x){ (abs(x))^norm_pow }
   # Compute the dispersion
-  purrr::map2_dfr(pairs[["i"]], pairs[["j"]], .resolve_dispersion, eigenvalues, norm_fn, digits) # Evaluate the matrix dispersion
+  disp <- purrr::map2_dfr(pairs[["i"]], pairs[["j"]], .resolve_dispersion, eigenvalues, norm_fn, digits)
+  # Return the dispersion
+  disp
 }
 
 #=================================================================================#
@@ -85,20 +90,35 @@ dispersion <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, n
 
 # Parses a matrix spectrum array for the eigenvalue at a given order as cplx type (for arithmetic)
 .read_eigenvalue <- function(order, mat_spectrum){
-  if(ncol(mat_spectrum) == 3){mat_spectrum[order, 1]} # If the components are not resolved, return value in the first (Eigenvalue) column
-  else{ # Components are resolved; get components and make it a complex number for arithmetic prep
-    evalue <- complex(real = mat_spectrum[order, 1], imaginary = mat_spectrum[order, 2])
-    #if(Im(evalue) != 0){evalue} else{as.numeric(evalue)} # If it is real, coerce it into a numeric to remove +0i
+  # If the components are not resolved, return value in the first (Eigenvalue) column
+  if(ncol(mat_spectrum) == 3){ mat_spectrum[order, "Eigenvalue"] }
+  # Components are resolved; get components and make it a complex number for arithmetic prep
+  else{ complex(real = mat_spectrum[order, "Re"], imaginary = mat_spectrum[order, "Im"]) }
+}
+
+# Resolves the numerical types of the eigenvalue columns of the dispersion dataframe
+.resolveNumType <- function(disp){
+  # See if the eigenvalues are complex
+  is_complex <- FALSE %in% c(Im(disp$eig_i) == 0, Im(disp$eig_j) == 0)
+  # If it is real, coerce it into a numeric, removing the +0i
+  if(!is_complex){
+    disp$eig_i <- as.numeric(disp$eig_i)
+    disp$eig_j <- as.numeric(disp$eig_j)
+    disp$id_diff <- as.numeric(disp$id_diff)
   }
+  disp # Return the resolved dispersion
 }
 
 #=================================================================================#
 # Parse a string argument for which pairing scheme to utilize
-.parsePairs <- function(pairs, array){
+.parsePairs <- function(pairs, array, array_class){
   valid_schemes <- c("largest", "lower", "upper", "consecutive", "all") # Valid schemes for printing if user is unaware of options
   # Obtain the matrix by inferring array type; if ensemble take first matrix
-  #if(class(array) == "list"){P <- array[[1]]} else{P <- array}
-  P <- array
+  if(array_class == "ensemble"){
+    P <- array[[1]]
+  } else if(array_class == "matrix"){
+    P <- array
+  }
   if(class(pairs) == "logical"){pairs <- "consecutive"} # Set default value to be the consecutive pair scheme
   # Stop function call if the argument is invalid
   if(!(pairs %in% valid_schemes)){stop(paste("Invalid pair scheme. Try one of the following: ",paste(valid_schemes, collapse = ", "),".", sep = ""))}
@@ -136,7 +156,8 @@ dispersion <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, n
 .unique_pairs_lower <- function(N){
   is <- do.call("c", purrr::map(1:N, function(i){rep(i,N)}))
   js <- rep(1:N, N)
-  do.call("rbind",purrr::map2(is, js, .f = function(i, j){if(i > j){c(i = i, j = j)}}))
+  pairs <- do.call("rbind",purrr::map2(is, js, .f = function(i, j){if(i > j){c(i = i, j = j)}}))
+  data.frame(pairs)
 }
 
 #=================================================================================#
@@ -145,42 +166,7 @@ dispersion <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, n
 .unique_pairs_upper <- function(N){
   is <- do.call("c", purrr::map(1:N, function(i){rep(i,N)}))
   js <- rep(1:N, N)
-  do.call("rbind",purrr::map2(is, js, .f = function(i, j){if(i < j){c(i = i, j = j)}}))
-}
-
-#=================================================================================#
-#                               DISPERSION (PARALLEL)
-#=================================================================================#
-
-#' @title Obtain the eigenvalue spacings of a matrix or ensemble of matrices.
-#' @description Returns a vector of the eigenvalue spacings of a random matrix or ensemble.
-#'
-#' @inheritParams dispersion
-#'
-#' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
-#'
-#' @examples
-#' # Eigenvalue dispersion in parallel
-#' P <- RME_norm(N = 20, size = 100)
-#' #disp_P <- dispersion_par(P)
-#'
-dispersion_par <- function(array, pairs = NA, sort_norms = TRUE, singular = FALSE, norm_pow = 1){ #sortNorms? orderByNorms? pair_scheme?
-  # Digits to round values to
-  digits <- 4
-  # Set up futures
-  future::plan(future::multisession)
-  # Get the type of array
-  array_class <- .arrayClass(array)
-  # Parse input and generate pair scheme (default NA), passing on array for dimension and array type inference
-  pairs <- .parsePairs(pairs, array)
-  # Compute the dispersion
-  if(array_class == "ensemble"){
-    # Array is an ensemble; recursively row binding each matrix's dispersions
-    furrr::future_map_dfr(array, .dispersion_matrix, pairs, sort_norms, singular, norm_pow, digits)
-  }
-  else if(array_class == "matrix"){
-    # Array is a matrix; call function returning dispersion for singleton matrix
-    .dispersion_matrix(array, pairs, sort_norms, singular, norm_pow, digits)
-  }
+  pairs <- do.call("rbind",purrr::map2(is, js, .f = function(i, j){if(i < j){c(i = i, j = j)}}))
+  data.frame(pairs)
 }
 

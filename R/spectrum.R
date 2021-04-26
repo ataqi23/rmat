@@ -21,14 +21,14 @@
 #' @examples
 #' # Eigenvalue spectrum of a random normal matrix
 #' P <- RM_norm(N = 5)
-#' spectrum_P <- spectrum(P)
+#' spec_P <- spectrum(P)
 #'
 #' Q <- matrix(runif(2^2), ncol = 2)
-#' spectrum_Q <- spectrum(Q)
+#' spec_Q <- spectrum(Q)
 #'
 #' # Eigenvalue spectra of ensemble matrices
-#' ensemble <- RME_norm(N = 3, size = 10)
-#' ensemble_spectrum <- spectrum(ensemble)
+#' ens <- RME_norm(N = 3, size = 10)
+#' spec_ens <- spectrum(ens)
 #'
 spectrum <- function(array, components = TRUE, sort_norms = TRUE, singular = FALSE, order = NA){
   # Digits to round values to
@@ -111,39 +111,4 @@ spectrum <- function(array, components = TRUE, sort_norms = TRUE, singular = FAL
   }
   # Otherwise, sort by sign and return
   else{ sort(vals, decreasing = TRUE) }
-}
-
-#=================================================================================#
-#                           EIGENVALUE SPECTRUM (PARALLEL)
-#=================================================================================#
-
-#' @title Obtain the eigenvalue spectrum of a matrix or ensemble of matrices concurrently (faster).
-#' @description Returns a tidied dataframe of the eigenvalues of a random matrix or ensemble concurrently (faster).
-#'
-#' @inheritParams spectrum
-#'
-#' @return A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.
-#'
-#' @examples
-#' # Generate a random matrix
-#' P <- RME_norm(N = 20, size = 100)
-#' # Compute the spectrum concurrently (faster)
-#' #spec_P <- spectrum_par(P)
-#'
-spectrum_par <- function(array, components = TRUE, sort_norms = TRUE, singular = FALSE, order = NA){
-  # Digits to round values to
-  digits <- 4
-  # Set up futures
-  future::plan(future::multisession)
-  # Get the type of array
-  array_class <- .arrayClass(array)
-  # Compute the spectrum
-  if(array_class == "ensemble"){
-    # Array is an ensemble; recursively row bind each matrix's eigenvalues
-    furrr::future_map_dfr(array, .spectrum_matrix, components, sort_norms, singular, order, digits)
-  }
-  else if(array_class == "matrix"){
-    # Array is a matrix; call function returning eigenvalues for a singleton matrix
-    .spectrum_matrix(array, components, sort_norms, singular, order, digits)
-  }
 }

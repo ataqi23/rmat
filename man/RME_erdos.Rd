@@ -25,6 +25,6 @@ Given the same arguments as RM_norm, this function returns an ensemble of random
 }
 \examples{
 # Generate an ensemble of 10x10 Erdos-Renyi transition matrices of size 50 with p = 0.7
-# ensemble <- RME_erdos(N = 10, p = 0.7, size = 50)
+ensemble <- RME_erdos(N = 10, p = 0.7, size = 50)
 
 }

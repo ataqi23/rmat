@@ -30,19 +30,20 @@ A tidy dataframe with the real & imaginary components of the eigenvalues and the
 Returns a vector of the eigenvalue spacings of a random matrix or ensemble.
 }
 \examples{
-# Eigenvalue dispersion of a normal matrix
+# Eigenvalue dispersion of a normal matrix using the lower pair scheme
 P <- RM_norm(N = 5)
-#disp_P <- dispersion(P)
+disp_P <- dispersion(P, pairs = "lower")
 
-# Eigenvalue dispersion of a stochastic matrix
+# Eigenvalue dispersion of a stochastic matrix (using the consecutive pair scheme)
 Q <- RM_stoch(N = 5)
-#disp_Q <- dispersion(Q)
+disp_Q <- dispersion(Q)
 
-# Eigenvalue dispersion of an ensemble
+# Eigenvalue dispersion of an normal matrix ensemble (using the consecutive pair scheme)
 ens <- RME_norm(N = 3, size = 10)
-#disp_ens <- dispersion(ens)
+disp_ens <- dispersion(ens)
 
 # Alternatively, use the pipe
-#disp_ens <- RME_norm(N = 3, size = 10) \%>\% dispersion()
+library(tidyverse)
+disp_ens <- RME_norm(N = 3, size = 10) \%>\% dispersion(pairs = "consecutive", norm_pow = 2)
 
 }
