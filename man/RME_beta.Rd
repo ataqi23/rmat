@@ -22,7 +22,6 @@ Given the same arguments as RM_norm, this function returns an ensemble of that p
   deterministic properties at the ensemble level in terms of their spectral statistics.
 }
 \examples{
-
 # Generate an ensemble of 10x10 beta matrices with beta = 4 of size 100.
 ensemble <- RME_beta(N = 10, beta = 4, size = 100)
 

@@ -19,6 +19,8 @@ dispersion(
 
 \item{sort_norms}{sorts the eigenvalue spectrum by its norms when TRUE; otherwise, sorts eigenvalue by sign}
 
+\item{singular}{get the singular values of the matrix (i.e. square root of the eigenvalues of the matrix times its transpose)}
+
 \item{norm_pow}{power to raise norm to - defaults to 1 (the standard absolute value); otherwise raises norm to the power of argument (beta norm)}
 }
 \value{
@@ -28,7 +30,6 @@ A tidy dataframe with the real & imaginary components of the eigenvalues and the
 Returns a vector of the eigenvalue spacings of a random matrix or ensemble.
 }
 \examples{
-
 # Eigenvalue dispersion of a normal matrix
 P <- RM_norm(N = 5)
 #disp_P <- dispersion(P)
@@ -38,10 +39,10 @@ Q <- RM_stoch(N = 5)
 #disp_Q <- dispersion(Q)
 
 # Eigenvalue dispersion of an ensemble
-ensemble <- RME_norm(N = 3, size = 10)
-#disp_ensemble <- dispersion(ensemble)
+ens <- RME_norm(N = 3, size = 10)
+#disp_ens <- dispersion(ens)
 
 # Alternatively, use the pipe
-#disp_ensemble <- RME_norm(N = 3, size = 10) \%>\% dispersion()
+#disp_ens <- RME_norm(N = 3, size = 10) \%>\% dispersion()
 
 }

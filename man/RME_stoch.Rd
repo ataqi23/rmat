@@ -22,7 +22,6 @@ Given the same arguments as RM_stoch, this function returns an ensemble of rando
   deterministic properties at the ensemble level in terms of their spectral statistics.
 }
 \examples{
-
 # Generate an ensemble of random 5x5 transition matrices of size 20.
 ensemble <- RME_stoch(N = 5, size = 20)
 

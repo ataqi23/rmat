@@ -26,7 +26,6 @@ Given the same arguments as RM_norm, this function returns an ensemble of random
   deterministic properties at the ensemble level in terms of their spectral statistics.
 }
 \examples{
-
 # Generate an ensemble of standard normal 3x3 matrices of size 20
 ensemble <- RME_norm(N = 3, size = 20)
 

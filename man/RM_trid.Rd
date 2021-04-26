@@ -18,7 +18,6 @@ A random tridiagonal matrix with N(0,2) diagonal and N(0,1) band.
 Generate a tridiagonal matrix with normal entries
 }
 \examples{
-
 # Generate a 3x3 standard normal tridiagonal matrix
 P <- RM_trid(N = 3)
 
