@@ -1,100 +1,6 @@
 
 #=================================================================================#
-#                             RANDOM MATRIX ENSEMBLES
-#=================================================================================#
-
-#' @title Generate an ensemble of normal random matrices
-#' @description Given the same arguments as RM_norm, this function returns an ensemble of random normal matrices.
-#'   While random matrices usually do not exude unique properties on their own, they do indeed have
-#'   deterministic properties at the ensemble level in terms of their spectral statistics.
-#' 
-#' @inheritParams RM_unif
-#' @param ... any default-valued parameters taken as arguments by RM_norm()
-#' @param size the size of the ensemble (i.e. number of matrices)
-#' 
-#' @return An ensemble (list) of normal matrices as specified by the matrix arguments.
-#' 
-#' @examples
-#' # Generate an ensemble of standard normal 3x3 matrices of size 20
-#' ensemble <- RME_norm(N = 3, size = 20)
-#'
-RME_unif <- function(N, min, max, ..., size){lapply(X = rep(N, size), FUN = RM_unif, min, max, ...)}
-
-#' @title Generate an ensemble of normal random matrices
-#' @description Given the same arguments as RM_norm, this function returns an ensemble of random normal matrices.
-#'   While random matrices usually do not exude unique properties on their own, they do indeed have
-#'   deterministic properties at the ensemble level in terms of their spectral statistics.
-#' 
-#' @inheritParams RM_norm
-#' @param ... any default-valued parameters taken as arguments by RM_norm()
-#' @param size the size of the ensemble (i.e. number of matrices)
-#' 
-#' @return An ensemble (list) of normal matrices as specified by the matrix arguments.
-#' 
-#' @examples
-#' # Generate an ensemble of standard normal 3x3 matrices of size 20
-#' ensemble <- RME_norm(N = 3, size = 20)
-#'
-RME_norm <- function(N, mean = 0, sd = 1, ..., size){lapply(X = rep(N, size), FUN = RM_norm, mean, sd, ...)}
-
-
-#' @title Generate an ensemble of random beta matrices
-#' @description Given the same arguments as RM_norm, this function returns an ensemble of that particular class of matrix.
-#'   While random matrices usually do not exude unique properties on their own, they do indeed have
-#'   deterministic properties at the ensemble level in terms of their spectral statistics.
-#'
-#' @inheritParams RM_beta
-#' @param size the size of the ensemble (i.e. number of matrices)
-#' 
-#' @return An ensemble (list) of beta matrices as specified by the matrix arguments.
-#' 
-#' @examples
-#' # Generate an ensemble of 10x10 beta matrices with beta = 4 of size 100.
-#' ensemble <- RME_beta(N = 10, beta = 4, size = 100)
-#'
-RME_beta <- function(N, beta, size){lapply(X = rep(N, size), FUN = RM_beta, beta)}
-
-
-#' @title Generate an ensemble of stochastic matrices
-#' @description Given the same arguments as RM_stoch, this function returns an ensemble of random stochastic matrices.
-#'   While random matrices usually do not exude unique properties on their own, they do indeed have
-#'   deterministic properties at the ensemble level in terms of their spectral statistics.
-#'
-#' @inheritParams RM_stoch
-#' @param ... pass any default-valued parameters taken as arguments by RM_stoch()
-#' @param size the size of the ensemble (i.e. number of matrices)
-#' 
-#' @return An ensemble (list) of stochastic matrices as specified by the matrix arguments.
-#' 
-#' @examples
-#' # Generate an ensemble of random 5x5 transition matrices of size 20.
-#' ensemble <- RME_stoch(N = 5, size = 20)
-#'
-#' # Generate an ensemble of symmetric random 5x5 transition matrices of size 20.
-#' ensemble <- RME_stoch(N = 5, symm = TRUE, size = 20)
-#'
-RME_stoch <- function(N, ..., size){lapply(X = rep(N, size), FUN = RM_stoch, ...)}
-
-
-#' @title Generate an ensemble of Erdos-Renyi transition matrices
-#' @description Given the same arguments as RM_norm, this function returns an ensemble of random Erdos-Renyi stochastic matrices.
-#'   While random matrices usually do not exude unique properties on their own, they do indeed have
-#'   deterministic properties at the ensemble level in terms of their spectral statistics.
-#'
-#' @inheritParams RM_erdos
-#' @param ... any default-valued parameters taken as arguments by RM_erdos()
-#' @param size the size of the ensemble (i.e. number of matrices)
-#' 
-#' @return An ensemble (list) of Erdos-Renyi transition matrices as specified by the matrix arguments.
-#' 
-#' @examples
-#' # Generate an ensemble of 10x10 Erdos-Renyi transition matrices of size 50 with p = 0.7
-#' # ensemble <- RME_erdos(N = 10, p = 0.7, size = 50)
-#'
-RME_erdos <- function(N, p, ..., size){lapply(X = rep(N, size), FUN = RM_erdos, p, ...)}
-
-#=================================================================================#
-#                                RANDOM MATRICES
+#                              UNIFORM RANDOM MATRICES
 #=================================================================================#
 
 #' @title Generate a uniform random matrix
@@ -268,6 +174,7 @@ RM_stoch <- function(N, symm = F, sparsity = F){
   P # Return the matrix
 }
 
+#=================================================================================#
 #' @title Generate a random stochastic matrix for a walk on an Erdos-Renyi graph
 #' @description An Erdos-Renyi Graph is a graph whose edges are connected ~ Bern(p).
 #'  Hence, its transition matrix will have nonzero entries with that probability.
@@ -315,6 +222,7 @@ RM_erdos <- function(N, p, stoch = T){
   row/sum(row) # Return normalized row
 }
 
+#=================================================================================#
 # Generates same rows as in r_stoch(N), but with introduced random sparsity
 .stoch_row_zeros <- function(N){
   row <- runif(N,0,1)
@@ -323,6 +231,7 @@ RM_erdos <- function(N, p, stoch = T){
   row/sum(row) # Return normalized row
 }
 
+#=================================================================================#
 # Generates a stochastic row with parameterized sparsity of p
 .stoch_row_erdos <- function(N, p){
   row <- runif(N,0,1) # Generate a uniform row of probabilites
@@ -330,7 +239,6 @@ RM_erdos <- function(N, p, stoch = T){
   row[sample(1:N, degree_vertex)] <- 0 # Choose edges to sever and sever them
   if(sum(row) != 0){row/sum(row)} else{row} # Return normalized row only if non-zero (cannot divide by 0)
 }
-
 
 #=========================================================================#
 #                             HELPER FUNCTIONS
@@ -348,6 +256,104 @@ RM_erdos <- function(N, p, stoch = T){
   P # Return Hermitian Matrix
 }
 
+#=================================================================================#
 # Return the off-diagonal entries of row i 
-.offdiagonalEntries <- function(row, row_index){row[which(1:length(row) != row_index)]}
+.offdiagonalEntries <- function(row, row_index){
+  row[which(1:length(row) != row_index)]
+}
+
+#=================================================================================#
+#                             RANDOM MATRIX ENSEMBLES
+#=================================================================================#
+
+#' @title Generate an ensemble of normal random matrices
+#' @description Given the same arguments as RM_norm, this function returns an ensemble of random normal matrices.
+#'   While random matrices usually do not exude unique properties on their own, they do indeed have
+#'   deterministic properties at the ensemble level in terms of their spectral statistics.
+#' 
+#' @inheritParams RM_unif
+#' @param ... any default-valued parameters taken as arguments by RM_norm()
+#' @param size the size of the ensemble (i.e. number of matrices)
+#' 
+#' @return An ensemble (list) of normal matrices as specified by the matrix arguments.
+#' 
+#' @examples
+#' # Generate an ensemble of standard normal 3x3 matrices of size 20
+#' ensemble <- RME_norm(N = 3, size = 20)
+#'
+RME_unif <- function(N, min, max, ..., size){lapply(X = rep(N, size), FUN = RM_unif, min, max, ...)}
+
+#=================================================================================#
+#' @title Generate an ensemble of normal random matrices
+#' @description Given the same arguments as RM_norm, this function returns an ensemble of random normal matrices.
+#'   While random matrices usually do not exude unique properties on their own, they do indeed have
+#'   deterministic properties at the ensemble level in terms of their spectral statistics.
+#' 
+#' @inheritParams RM_norm
+#' @param ... any default-valued parameters taken as arguments by RM_norm()
+#' @param size the size of the ensemble (i.e. number of matrices)
+#' 
+#' @return An ensemble (list) of normal matrices as specified by the matrix arguments.
+#' 
+#' @examples
+#' # Generate an ensemble of standard normal 3x3 matrices of size 20
+#' ensemble <- RME_norm(N = 3, size = 20)
+#'
+RME_norm <- function(N, mean = 0, sd = 1, ..., size){lapply(X = rep(N, size), FUN = RM_norm, mean, sd, ...)}
+
+#=================================================================================#
+#' @title Generate an ensemble of random beta matrices
+#' @description Given the same arguments as RM_norm, this function returns an ensemble of that particular class of matrix.
+#'   While random matrices usually do not exude unique properties on their own, they do indeed have
+#'   deterministic properties at the ensemble level in terms of their spectral statistics.
+#'
+#' @inheritParams RM_beta
+#' @param size the size of the ensemble (i.e. number of matrices)
+#' 
+#' @return An ensemble (list) of beta matrices as specified by the matrix arguments.
+#' 
+#' @examples
+#' # Generate an ensemble of 10x10 beta matrices with beta = 4 of size 100.
+#' ensemble <- RME_beta(N = 10, beta = 4, size = 100)
+#'
+RME_beta <- function(N, beta, size){lapply(X = rep(N, size), FUN = RM_beta, beta)}
+
+#=================================================================================#
+#' @title Generate an ensemble of stochastic matrices
+#' @description Given the same arguments as RM_stoch, this function returns an ensemble of random stochastic matrices.
+#'   While random matrices usually do not exude unique properties on their own, they do indeed have
+#'   deterministic properties at the ensemble level in terms of their spectral statistics.
+#'
+#' @inheritParams RM_stoch
+#' @param ... pass any default-valued parameters taken as arguments by RM_stoch()
+#' @param size the size of the ensemble (i.e. number of matrices)
+#' 
+#' @return An ensemble (list) of stochastic matrices as specified by the matrix arguments.
+#' 
+#' @examples
+#' # Generate an ensemble of random 5x5 transition matrices of size 20.
+#' ensemble <- RME_stoch(N = 5, size = 20)
+#'
+#' # Generate an ensemble of symmetric random 5x5 transition matrices of size 20.
+#' ensemble <- RME_stoch(N = 5, symm = TRUE, size = 20)
+#'
+RME_stoch <- function(N, ..., size){lapply(X = rep(N, size), FUN = RM_stoch, ...)}
+
+#=================================================================================#
+#' @title Generate an ensemble of Erdos-Renyi transition matrices
+#' @description Given the same arguments as RM_norm, this function returns an ensemble of random Erdos-Renyi stochastic matrices.
+#'   While random matrices usually do not exude unique properties on their own, they do indeed have
+#'   deterministic properties at the ensemble level in terms of their spectral statistics.
+#'
+#' @inheritParams RM_erdos
+#' @param ... any default-valued parameters taken as arguments by RM_erdos()
+#' @param size the size of the ensemble (i.e. number of matrices)
+#' 
+#' @return An ensemble (list) of Erdos-Renyi transition matrices as specified by the matrix arguments.
+#' 
+#' @examples
+#' # Generate an ensemble of 10x10 Erdos-Renyi transition matrices of size 50 with p = 0.7
+#' # ensemble <- RME_erdos(N = 10, p = 0.7, size = 50)
+#'
+RME_erdos <- function(N, p, ..., size){lapply(X = rep(N, size), FUN = RM_erdos, p, ...)}
 
