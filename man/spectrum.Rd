@@ -2,27 +2,27 @@
 % Please edit documentation in R/spectrum.R
 \name{spectrum}
 \alias{spectrum}
-\title{Obtain the eigenvalue spectrum of a matrix or ensemble of matrices.}
+\title{Obtain the ordered eigenvalue spectrum of a matrix or ensemble of matrices.}
 \usage{
 spectrum(
   array,
-  components = TRUE,
   norm_order = TRUE,
   singular = FALSE,
+  components = TRUE,
   order = NA
 )
 }
 \arguments{
 \item{array}{a square matrix or matrix ensemble whose eigenvalues are to be returned}
 
-\item{components}{returns the array with resolved real and imaginary components if TRUE; otherwise returns complex-valued eigenvalues}
+\item{norm_order}{sorts the eigenvalue spectrum by its norms if TRUE, otherwise sorts them by sign}
 
-\item{norm_order}{sorts the eigenvalue spectrum by its norms, otherwise sorts by sign}
+\item{singular}{return the singular values of the matrix or matrix ensemble}
 
-\item{singular}{get the singular values of the matrix (i.e. square root of the eigenvalues of the matrix times its transpose)}
+\item{components}{returns the array with resolved real and imaginary components if TRUE, otherwise returns complex-valued eigenvalues}
 
-\item{order}{get eigenvalues with that given order (norm ranking); order 1 represents largest, order N represents smallest (where N is the number of eigenvalues).
-If uninitialized, returns the entire spectrum.}
+\item{order}{an integer or integer vector of which eigenvalue orders to return; order 1 representing the largest, order N represents smallest (where N is the number of eigenvalues).
+If uninitialized, defaults to returning the entire spectrum.}
 }
 \value{
 A tidy dataframe with the real & imaginary components of the eigenvalues and their norms along with a unique index.

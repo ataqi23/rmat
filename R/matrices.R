@@ -193,7 +193,7 @@ RM_stoch <- function(N, symm = F, sparsity = F){
 #' # Completely connected graph
 #' P <- RM_erdos(N = 5, p = 1)
 #'
-RM_erdos <- function(N, p, stoch = T){
+RM_erdos <- function(N, p){
   # Generate an [N x N] Erdos-Renyi stochastic matrix by stacking N p-stochastic rows
   P <- do.call("rbind", lapply(X = rep(N, N), FUN = .stoch_row_erdos, p = p))
   # Return the Erdos-Renyi transition matrix
@@ -370,7 +370,6 @@ RME_stoch <- function(N, ..., size){lapply(X = rep(N, size), FUN = RM_stoch, ...
 #'   deterministic properties at the ensemble level in terms of their spectral statistics.
 #'
 #' @inheritParams RM_erdos
-#' @param ... any default-valued parameters taken as arguments by RM_erdos()
 #' @param size the size of the ensemble (i.e. number of matrices)
 #'
 #' @return An ensemble (list) of Erdos-Renyi transition matrices as specified by the matrix arguments.
@@ -379,4 +378,4 @@ RME_stoch <- function(N, ..., size){lapply(X = rep(N, size), FUN = RM_stoch, ...
 #' # Generate an ensemble of 10x10 Erdos-Renyi transition matrices of size 50 with p = 0.7
 #' ensemble <- RME_erdos(N = 10, p = 0.7, size = 50)
 #'
-RME_erdos <- function(N, p, ..., size){lapply(X = rep(N, size), FUN = RM_erdos, p, ...)}
+RME_erdos <- function(N, p, size){lapply(X = rep(N, size), FUN = RM_erdos, p)}

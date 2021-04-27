@@ -4,15 +4,12 @@
 \alias{RM_erdos}
 \title{Generate a random stochastic matrix for a walk on an Erdos-Renyi graph}
 \usage{
-RM_erdos(N, p, stoch = T)
+RM_erdos(N, p)
 }
 \arguments{
 \item{N}{number of dimensions of the square matrix}
 
 \item{p}{the probability two vertices are connected in an Erdos-Renyi graph.}
-
-\item{stoch}{indicates whether the matrix should be stochastic;
-changing this parameter may lead to the function returning invalid transition matrices.}
 }
 \value{
 A random stochastic matrix corrosponding to a walk on an Erdos-Renyi graph with probability p.
@@ -26,12 +23,10 @@ An Erdos-Renyi Graph is a graph whose edges are connected ~ Bern(p).
 # Very sparse graph
 P <- RM_erdos(N = 3, p = 0.2)
 
+# Slightly sparse graph
 P <- RM_erdos(N = 9, p = 0.6)
 
 # Completely connected graph
 P <- RM_erdos(N = 5, p = 1)
-
-# May yield invalid transition matrix.
-Q <- RM_erdos(N = 5, p = 0.3, stoch = FALSE)
 
 }

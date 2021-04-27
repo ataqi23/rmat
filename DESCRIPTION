@@ -2,6 +2,17 @@ Package: RMAT
 Version: 0.2.0
 Title: Random Matrix Analysis Toolkit
 Author: Ali Taqi
+Authors@R:
+    c(person(given = "Ali",
+             family = "Taqi",
+             role = c("aut", "cre"),
+             email = "alif.taqi00@gmail.com",
+             comment = c(ORCID = "0000-0002-2130-9256")),
+      person(given = "Jonathan",
+             family = "Wells",
+             role =  c("ths"),
+             email = "wellsj@reed.edu")
+             )
 Maintainer: Ali Taqi <alif.taqi00@gmail.com>
 Description: Simulate random matrices and ensembles and analyze their eigenvalue spectra and dispersions.
 License: MIT + file LICENSE
@@ -11,8 +22,6 @@ Imports:
   purrr,
   dplyr,
   stats,
-  magrittr,
-  future,
-  furrr
+  magrittr
 Suggests:
   tidyverse

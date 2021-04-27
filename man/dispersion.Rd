@@ -17,9 +17,9 @@ dispersion(
 
 \item{pairs}{a string argument representing the pairing scheme to use}
 
-\item{norm_order}{sorts the eigenvalue spectrum by its norms when TRUE; otherwise, sorts eigenvalue by sign}
+\item{norm_order}{sorts the eigenvalue spectrum by its norms if TRUE, otherwise sorts them by sign}
 
-\item{singular}{get the singular values of the matrix (i.e. square root of the eigenvalues of the matrix times its transpose)}
+\item{singular}{return the singular values of the matrix or matrix ensemble}
 
 \item{pow_norm}{power to raise norm to - defaults to 1 (the standard absolute value); otherwise raises norm to the power of argument (beta norm)}
 }
