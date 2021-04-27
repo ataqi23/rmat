@@ -4,14 +4,12 @@
 \alias{RME_erdos}
 \title{Generate an ensemble of Erdos-Renyi transition matrices}
 \usage{
-RME_erdos(N, p, ..., size)
+RME_erdos(N, p, size)
 }
 \arguments{
 \item{N}{number of dimensions of the square matrix}
 
 \item{p}{the probability two vertices are connected in an Erdos-Renyi graph.}
-
-\item{...}{any default-valued parameters taken as arguments by RM_erdos()}
 
 \item{size}{the size of the ensemble (i.e. number of matrices)}
 }

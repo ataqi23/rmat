@@ -18,7 +18,7 @@ RM_unif(N, min, max, symm = FALSE, cplx = FALSE, herm = FALSE)
 \item{cplx}{indicates whether the matrix should have complex entries.}
 
 \item{herm}{indicates whether the matrix should be hermitian (equal to its conjugate transpose).
-Reserved for when complex = T, otherwise use symm = T.}
+Reserved for when cplx = TRUE, otherwise use symm = TRUE.}
 }
 \value{
 A random matrix with uniformly distributed entries.

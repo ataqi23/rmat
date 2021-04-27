@@ -14,12 +14,12 @@ RM_norm(N, mean = 0, sd = 1, symm = FALSE, cplx = FALSE, herm = FALSE)
 \item{sd}{standard deviation of the normal distribution of entries}
 
 \item{symm}{indicates whether the matrix should be symmetric (equal to its transpose).
-Reserved for when complex = F, otherwise use hermitian = T.}
+Reserved for when cplx = FALSE, otherwise use herm = TRUE.}
 
 \item{cplx}{indicates whether the matrix should have complex entries.}
 
 \item{herm}{indicates whether the matrix should be hermitian (equal to its conjugate transpose).
-Reserved for when complex = T, otherwise use symm = T.}
+Reserved for when cplx = TRUE, otherwise use symm = TRUE.}
 }
 \value{
 A random matrix with normally distributed entries.

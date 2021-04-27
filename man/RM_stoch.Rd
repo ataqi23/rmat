@@ -4,7 +4,7 @@
 \alias{RM_stoch}
 \title{Generate a random stochastic matrix}
 \usage{
-RM_stoch(N, symm = F, sparsity = F)
+RM_stoch(N, symm = FALSE, sparsity = FALSE)
 }
 \arguments{
 \item{N}{number of dimensions of the square matrix}

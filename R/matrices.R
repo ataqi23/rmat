@@ -12,7 +12,7 @@
 #' @param symm indicates whether the matrix should be symmetric (equal to its transpose).
 #' @param cplx indicates whether the matrix should have complex entries.
 #' @param herm indicates whether the matrix should be hermitian (equal to its conjugate transpose).
-#'   Reserved for when complex = T, otherwise use symm = T.
+#'   Reserved for when cplx = TRUE, otherwise use symm = TRUE.
 #'
 #' @return A random matrix with uniformly distributed entries.
 #'
@@ -55,10 +55,10 @@ RM_unif <- function(N, min, max, symm = FALSE, cplx = FALSE, herm = FALSE){
 #' @param mean mean of the normal distribution of entries
 #' @param sd standard deviation of the normal distribution of entries
 #' @param symm indicates whether the matrix should be symmetric (equal to its transpose).
-#'   Reserved for when complex = F, otherwise use hermitian = T.
+#'   Reserved for when cplx = FALSE, otherwise use herm = TRUE.
 #' @param cplx indicates whether the matrix should have complex entries.
 #' @param herm indicates whether the matrix should be hermitian (equal to its conjugate transpose).
-#'   Reserved for when complex = T, otherwise use symm = T.
+#'   Reserved for when cplx = TRUE, otherwise use symm = TRUE.
 #'
 #' @return A random matrix with normally distributed entries.
 #' @examples
@@ -91,7 +91,7 @@ RM_norm <- function(N, mean = 0, sd = 1, symm = FALSE, cplx = FALSE, herm = FALS
 #=================================================================================#
 #' @title Generate a Hermite \eqn{\beta}-matrix
 #' @description Hermite-\eqn{\beta} ensemble matrices are matrices with normal entries and beta real number components.
-#'   Using Dumitriu's tridiagonal model, this function is an implementation of the generalized, but not necessarily invariant,
+#'   Using Dumitriu's tridiagonal matrix model, this function is an implementation of the generalized, but not necessarily invariant,
 #'   beta ensembles for \eqn{\beta} > 0.
 #'
 #' @param N number of dimensions of the square matrix
@@ -161,7 +161,7 @@ RM_trid <- function(N, symm = FALSE){
 #' Q <- RM_stoch(N = 9, symm = TRUE)
 #' Q <- RM_stoch(N = 9, symm = TRUE, sparsity = TRUE)
 #'
-RM_stoch <- function(N, symm = F, sparsity = F){
+RM_stoch <- function(N, symm = FALSE, sparsity = FALSE){
   # Choose row function depending on sparsity argument
   if(sparsity){row_fxn <- .stoch_row_zeros} else {row_fxn <- .stoch_row}
   # Generate the [N x N] stochastic matrix stacking N stochastic rows
