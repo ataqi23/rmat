@@ -31,3 +31,15 @@ ens %>% spectrum()
 disp_ens <- dispersion(ens, pairs = "lower")
 disp_ens
 ```
+
+
+```{r}
+N <- 10
+p <- 0.5
+size <- 200
+ens <- RME_erdos(N, p, size)
+spec <- ens %>% spectrum(order = 1:3)
+spec$Order <- as.factor(spec$Order)
+spec %>% spectrum.scatterplot()
+```
+
