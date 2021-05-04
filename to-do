@@ -1,0 +1,10 @@
+To-Do list:
+
+Visualization module:
+- Implement a basic visualization module
+- Add the matrix makeTitle to incoroporate dimension into title
+- Implement .arrayVisClass sorting an array into either matrix, ensemble, spectrum/dispersion (for prior computations)
+- aes(shape = isLargest)
+
+Dispersion:
+- Add Wigner Dispersion
