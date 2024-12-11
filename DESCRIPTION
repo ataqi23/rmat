@@ -16,8 +16,8 @@ Description: Simulate random matrices and ensembles and compute their eigenvalue
 License: MIT + file LICENSE
 Encoding: UTF-8
 RoxygenNote: 7.1.1
-URL: https://github.com/ataqi23/RMAT
-BugReports: https://github.com/ataqi23/RMAT/issues
+URL: https://github.com/eli-fidele/RMAT
+BugReports: https://github.com/eli-fidele/RMAT/issues
 Imports:
   purrr,
   dplyr,
